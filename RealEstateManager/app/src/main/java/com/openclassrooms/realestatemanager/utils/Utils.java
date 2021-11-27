@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager;
+package com.openclassrooms.realestatemanager.utils;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -21,11 +21,11 @@ public class Utils {
      * @return
      */
     public static int convertDollarToEuro(int dollars){
-        return (int) Math.round(dollars * 1.12);
+        return (int) Math.round(dollars * 0.88);
     }
 
     public static int convertEuroToDollars(int euros){
-        return (int) Math.round(euros * 0.88);
+        return (int) Math.round(euros * 1.12);
     }
 
     /**
@@ -48,4 +48,6 @@ public class Utils {
         WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
         return wifi.isWifiEnabled();
     }
+
+
 }

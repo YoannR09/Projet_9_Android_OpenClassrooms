@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager;
 
+import com.openclassrooms.realestatemanager.utils.Utils;
+
 import org.junit.Test;
 
 import java.util.Date;
@@ -25,7 +27,7 @@ public class UtilsTest {
         int result = Utils.convertDollarToEuro(500);
 
         // THEN
-        assertEquals(560, result);
+        assertEquals(440, result);
     }
 
     @Test
@@ -34,6 +36,6 @@ public class UtilsTest {
         int result = Utils.convertEuroToDollars(500);
 
         // THEN
-        assertEquals(440, result);
+        assertEquals(560, result);
     }
 }
