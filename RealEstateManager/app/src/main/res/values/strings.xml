@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Real Estate Manager</string>
+    <string name="error_login">Failed to login</string>
 </resources>

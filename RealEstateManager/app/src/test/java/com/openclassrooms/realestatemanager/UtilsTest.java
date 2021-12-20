@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager;
 
+import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase;
 import com.openclassrooms.realestatemanager.utils.Utils;
 
 import org.junit.Test;

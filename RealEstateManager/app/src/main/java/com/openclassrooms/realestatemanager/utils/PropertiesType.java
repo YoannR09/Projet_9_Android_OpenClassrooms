@@ -5,5 +5,5 @@ public enum PropertiesType {
     LOFT,
     MANOR,
     HOUSE,
-    STUDIO
+    STUDIO;
 }
