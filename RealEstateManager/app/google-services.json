@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "169848718754",
+    "project_id": "realestatemanager-6094e",
+    "storage_bucket": "realestatemanager-6094e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:169848718754:android:bbc2ad1e78c3173823defb",
+        "android_client_info": {
+          "package_name": "com.openclassrooms.realestatemanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "169848718754-8hvfo1hbblbi59j7833b5jne51m1b32g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.openclassrooms.realestatemanager",
+            "certificate_hash": "c8372b70f37f64dbe7415cdc8ae3e99d82826201"
+          }
+        },
+        {
+          "client_id": "169848718754-ohkrtn6i49hh616fbkuk7807quge6grm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7pXwrSQM1Sfaf60rjL-tZlQVsLMRsxFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "169848718754-ohkrtn6i49hh616fbkuk7807quge6grm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
