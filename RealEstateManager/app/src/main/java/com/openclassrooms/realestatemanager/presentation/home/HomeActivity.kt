@@ -2,24 +2,19 @@ package com.openclassrooms.realestatemanager.presentation.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealeStateManagerApplication
-import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
-import com.openclassrooms.realestatemanager.utils.Utils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.util.*
 
 class HomeActivity : AppCompatActivity() {
-    private var textViewMain: TextView? = null
-    private var textViewQuantity: TextView? = null
+
+    private lateinit var viewModel: HomeActivityViewModel
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -41,31 +36,14 @@ class HomeActivity : AppCompatActivity() {
                     .build()
             signInLauncher.launch(signInIntent)
         } else {
-            // init view
+            this.initView()
         }
 
+    }
 
+    private fun initView() {
+        viewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         setContentView(R.layout.activity_main)
-        textViewMain = findViewById(R.id.activity_main_activity_text_view_main)
-        textViewQuantity = findViewById(R.id.activity_main_activity_text_view_quantity)
-        configureTextViewMain()
-        configureTextViewQuantity()
-        GlobalScope.launch {
-            val token = GetPropertyListUseCase().getList(RealeStateManagerApplication.getContextApp())
-            println("here")
-            println(token)
-        }
-    }
-
-    private fun configureTextViewMain() {
-        textViewMain!!.textSize = 15f
-        textViewMain!!.text = "Le premier bien immobilier enregistré vaut "
-    }
-
-    private fun configureTextViewQuantity() {
-        val quantity = Utils.convertDollarToEuro(100)
-        textViewQuantity!!.textSize = 20f
-        textViewQuantity!!.text = quantity.toString()
     }
 
     /**
@@ -74,12 +52,22 @@ class HomeActivity : AppCompatActivity() {
      */
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == RESULT_OK) {
-            // INIT VIEW
+            this.initView()
         } else {
             val toast = Toast.makeText(RealeStateManagerApplication.getContextApp(),
                     getString(R.string.error_login), Toast.LENGTH_LONG)
             toast.show()
-            // REFRESH MAIN ACTIVTY AND RESEST
+            logoutToRefreshMainActivity()
         }
+    }
+
+    /**
+     * This method return to Freibase auth activity
+     * And lohout if current firebase session has active
+     */
+    private fun logoutToRefreshMainActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 }

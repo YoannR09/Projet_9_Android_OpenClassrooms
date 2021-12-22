@@ -8,7 +8,9 @@
     android:gravity="center">
 
     <androidx.fragment.app.FragmentContainerView
-        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.33"
         android:layout_height="match_parent"
         android:id="@+id/list_fragment"
         tools:context=".MapsActivity"

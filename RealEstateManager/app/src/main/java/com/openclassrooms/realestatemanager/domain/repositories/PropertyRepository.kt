@@ -9,4 +9,8 @@ class PropertyRepository(private val dao: PropertiesDao) {
     suspend fun getList(): List<PropertyEntity> {
         return this.dao.list()
     }
+
+    suspend fun createProperty(propertyEntity: PropertyEntity) {
+        return this.dao.createProperty(propertyEntity)
+    }
 }

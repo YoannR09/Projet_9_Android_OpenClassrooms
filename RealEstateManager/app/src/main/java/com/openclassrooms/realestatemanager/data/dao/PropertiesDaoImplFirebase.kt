@@ -27,10 +27,24 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
-    override fun createProperty(entity: PropertyEntity?) {
-        TODO("Not yet implemented")
+    override suspend fun createProperty(entity: PropertyEntity?) {
+        return suspendCoroutine {
+            db.collection("property")
+                    .add(entity!!)
+                    .addOnCompleteListener {
+                        result ->
+                        if(result.isSuccessful) {
+                            it.resume(Unit)
+                        } else {
+                            it.resume(Unit)
+                        }
+                    }
+        }
     }
 
+    /**
+     * Shouldn't be impl on this project
+     */
     override fun deleteProperty(id: String?) {
         TODO("Not yet implemented")
     }

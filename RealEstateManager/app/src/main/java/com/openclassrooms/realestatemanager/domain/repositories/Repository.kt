@@ -12,7 +12,7 @@ class Repository {
         private var propertyRepository: PropertyRepository? = null
         private var localProperyRepository: PropertyRepository? = null
         private val propertiesDaoRoom: PropertiesDaoRoom?
-        = RealEstateManagerDatabase.getInstance().propertiesDaoRoom()
+        = RealEstateManagerDatabase.instance?.propertiesDaoRoom()
 
         private fun createPropertyRepo() {
             propertyRepository = PropertyRepository(PropertiesDaoImplFirebase())

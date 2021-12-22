@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -19,8 +18,8 @@ public class Utils {
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param dollars
-     * @return
+     * @param dollars int
+     * @return int
      */
     public static int convertDollarToEuro(int dollars){
         return (int) Math.round(dollars * 0.88);
@@ -33,7 +32,7 @@ public class Utils {
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @return
+     * @return date formatted
      */
     public static String getTodayDate(){
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -43,14 +42,9 @@ public class Utils {
     /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param context
-     * @return
+     * @param context Context
+     * @return boolean
      */
-    public static Boolean isInternetAvailable(Context context){
-        WifiManager wifi = (WifiManager)context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        return wifi.isWifiEnabled();
-    }
-
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
