@@ -9,16 +9,17 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 
-class PropertyAdapter(data: MutableList<PropertyListFragmentViewModel>?, lifecycleOwner: LifecycleOwner?, private var owner: ViewModelStoreOwner?) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+class PropertyAdapter(data: List<PropertyEntity>?, lifecycleOwner: LifecycleOwner?, private var owner: ViewModelStoreOwner?) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
 
-    private var mData: MutableList<PropertyListFragmentViewModel>? = data
+    private var mData: List<PropertyEntity>? = data
     private var lifecycleRegistry: LifecycleOwner? = lifecycleOwner
     private var context: Context? = null
 
-    fun updateList(viewModelList: List<PropertyListFragmentViewModel>?) {
-        mData!!.clear()
-        mData!!.addAll(viewModelList!!)
+    fun updateList(viewModelList: List<PropertyEntity>?) {
+        mData = listOf()
+        mData = viewModelList!!
         notifyDataSetChanged()
     }
 
@@ -48,7 +49,7 @@ class PropertyAdapter(data: MutableList<PropertyListFragmentViewModel>?, lifecyc
             itemView: View)
         : RecyclerView.ViewHolder(itemView), View.OnClickListener, LifecycleOwner {
 
-        fun bind(propertyListFragmentViewModel: PropertyListFragmentViewModel) {
+        fun bind(propertyListFragmentViewModel: PropertyEntity) {
 
         }
 

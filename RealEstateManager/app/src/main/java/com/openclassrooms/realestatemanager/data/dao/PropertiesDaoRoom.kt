@@ -9,10 +9,10 @@ import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 @Dao
 interface PropertiesDaoRoom : PropertiesDao {
 
-    @Query("SELECT * FROM property")
+    @Query("SELECT * FROM propertyentity")
     override suspend fun list(): List<PropertyEntity>
     @Insert
     override suspend fun createProperty(entity: PropertyEntity?)
-    @Query("DELETE FROM property WHERE id = :id")
+    @Query("DELETE FROM propertyentity WHERE id = :id")
     override fun deleteProperty(id: String?)
 }

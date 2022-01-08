@@ -7,11 +7,15 @@
     tools:context="com.openclassrooms.realestatemanager.presentation.home.HomeActivity"
     android:gravity="center">
 
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/tool_bar" />
+
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/list_fragment"
         tools:context=".MapsActivity"
-        android:name="com.openclassrooms.realestatemanager.presentation.fragments.PropertyListFragment" />
+        android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

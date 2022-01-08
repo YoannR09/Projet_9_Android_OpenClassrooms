@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
@@ -31,37 +32,33 @@ android {
 
 dependencies {
     // Java language implementation
-    implementation "androidx.core:core:1.7.0"
+    implementation "androidx.core:core-ktx:1.7.0"
     // Kotlin
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.0-native-mt'
     implementation platform('com.google.firebase:firebase-bom:29.0.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.5.31"
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.room:room-runtime:2.3.0'
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
-    // https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.5.31'
-    implementation 'androidx.room:room-ktx:2.3.0'
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
 
     // Declare the dependency for the Cloud Firestore library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-firestore-ktx'
-    implementation("androidx.multidex:multidex:2.0.1")
-
-    annotationProcessor 'androidx.room:room-compiler:2.3.0'
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.room:room-runtime:2.4.0'
+    implementation "androidx.room:room-ktx:2.4.0"
+    kapt "androidx.room:room-compiler:2.4.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
     testImplementation 'junit:junit:4.13.2'
     implementation 'com.firebaseui:firebase-ui-auth:7.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.0'
 }
 repositories {
     mavenCentral()

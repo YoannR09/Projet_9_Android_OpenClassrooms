@@ -7,11 +7,12 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.openclassrooms.realestatemanager.data.dao.PropertiesDaoRoom
 import com.openclassrooms.realestatemanager.data.dao.converters.PictureEntityConverter
+import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import java.sql.Timestamp
 import java.util.*
 
-@Database(entities = [PropertyEntity::class], version = 1, exportSchema = false)
+@Database(entities = [PropertyEntity::class, PictureEntity::class], version = 1, exportSchema = false)
 abstract class RealEstateManagerDatabase : RoomDatabase() {
     // --- DAO ---
     abstract fun propertiesDaoRoom(): PropertiesDaoRoom?
@@ -37,7 +38,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
             if (instance == null) {
                 instance = Room.databaseBuilder(context.applicationContext,
                         RealEstateManagerDatabase::class.java, "realEstateManagerDB.db")
-                        .addTypeConverter(PictureEntityConverter)
+                        //.addTypeConverter(PictureEntityConverter)
                         .addCallback(prepopulateDatabase())
                         .build()
             }
