@@ -11,14 +11,37 @@
         android:id="@+id/tool_bar"
         layout="@layout/tool_bar" />
 
-    <androidx.fragment.app.FragmentContainerView
-        app:layout_constraintStart_toStartOf="parent"
+    <ScrollView
+        android:id="@+id/left_part"
         android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintWidth_percent="0.33"
-        android:layout_height="match_parent"
-        android:minWidth="250dp"
-        android:id="@+id/list_fragment"
-        tools:context=".MapsActivity"
-        android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.fragment.app.FragmentContainerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/list_fragment"
+            tools:context=".MapsActivity"
+            android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
+    </ScrollView>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintStart_toEndOf="@id/left_part"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.fragment.app.FragmentContainerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/property_fragment"
+            tools:context=".MapsActivity"
+            android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

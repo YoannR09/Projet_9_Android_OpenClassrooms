@@ -16,10 +16,8 @@ class HomeActivityViewModel: ViewModel() {
     //    emit(data)
     //}
 
-    val properties = MutableLiveData<List<PropertyEntity>>(listOf())
+    val indexSelected = MutableLiveData<Number>(0)
 
-    fun loadProperties() {
-        properties.value = listOf()
-    }
-
-}
+    fun changeSelectIndex(index: Number) {
+        indexSelected.value = index
+    }}

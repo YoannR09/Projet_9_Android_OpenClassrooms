@@ -13,7 +13,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar"
+        app:layout_constraintStart_toStartOf="parent"
         android:id="@+id/list_fragment"
         tools:context=".MapsActivity"
         android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />

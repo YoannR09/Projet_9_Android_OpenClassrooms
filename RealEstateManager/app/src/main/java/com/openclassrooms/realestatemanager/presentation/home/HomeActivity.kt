@@ -19,7 +19,7 @@ import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyAc
 
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: HomeActivityViewModel
+    lateinit var viewModel: HomeActivityViewModel
     lateinit var toolbar: MaterialToolbar
 
     private val signInLauncher = registerForActivityResult(
@@ -52,7 +52,7 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.tool_bar)
-        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar)
     }
 
     /**

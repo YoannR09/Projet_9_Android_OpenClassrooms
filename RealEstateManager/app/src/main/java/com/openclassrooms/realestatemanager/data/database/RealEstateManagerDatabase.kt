@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.openclassrooms.realestatemanager.data.dao.PropertiesDaoRoom
 import com.openclassrooms.realestatemanager.data.dao.converters.PictureEntityConverter
@@ -13,6 +14,7 @@ import java.sql.Timestamp
 import java.util.*
 
 @Database(entities = [PropertyEntity::class, PictureEntity::class], version = 1, exportSchema = false)
+@TypeConverters(PictureEntityConverter::class)
 abstract class RealEstateManagerDatabase : RoomDatabase() {
     // --- DAO ---
     abstract fun propertiesDaoRoom(): PropertiesDaoRoom?
@@ -44,7 +46,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
             }
         }
 
-        fun prepopulateDatabase(): Callback {
+        private fun prepopulateDatabase(): Callback {
             return object : Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)

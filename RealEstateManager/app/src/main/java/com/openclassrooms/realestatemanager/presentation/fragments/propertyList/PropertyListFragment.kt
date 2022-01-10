@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import java.util.*
 
 /**
@@ -17,7 +19,7 @@ import java.util.*
  */
 class PropertyListFragment : Fragment() {
 
-    var adapter: PropertyAdapter? = null
+    private var adapter: PropertyAdapter? = null
     var recyclerView: RecyclerView? = null
     private lateinit var viewModel: PropertyListFragmentViewModel
 
@@ -29,14 +31,21 @@ class PropertyListFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         return try {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
-            // viewModel = ViewModelProvider(this).get(Frag::class.java)
+            viewModel = ViewModelProvider(this)[PropertyListFragmentViewModel::class.java]
             recyclerView = view.findViewById(R.id.rvPropertyList)
             recyclerView?.layoutManager = LinearLayoutManager(activity)
-            adapter = PropertyAdapter(ArrayList(), this, this)
+            adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), it.viewModel, this) }
             recyclerView?.adapter = adapter
-            //viewModel.getCurrentRestaurants().observe(activity) { restaurants -> adapter.updateList(restaurants) }
+            viewModel.properties.observe(this.viewLifecycleOwner) {
+                result ->
+                run {
+                    adapter?.updateList(result)
+                }
+            }
+            viewModel.loadProperties()
             view
         } catch (e: Exception) {
+            e.printStackTrace()
             inflater.inflate(R.layout.fragment_property_list, container, false)
         }
     }
@@ -45,7 +54,6 @@ class PropertyListFragment : Fragment() {
         /**
          * @return A new instance of fragment PropertyListFragment.
          */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance() =
                 PropertyListFragment()
