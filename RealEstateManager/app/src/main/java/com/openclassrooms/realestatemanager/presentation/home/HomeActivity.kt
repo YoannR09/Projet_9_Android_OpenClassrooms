@@ -4,8 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
@@ -13,21 +17,29 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.RealeStateManagerApplication
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
+import com.openclassrooms.realestatemanager.utils.ErrorState.Companion.errorState
 
 
 class HomeActivity : AppCompatActivity() {
-
+    private val DRAWER_ICON_ID = 16908332
     lateinit var viewModel: HomeActivityViewModel
     lateinit var toolbar: MaterialToolbar
+    lateinit var drawer: DrawerLayout
+    lateinit var drawerButton: Button
+    lateinit var largeScreenList: View
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
+        errorState.observe(this) { msg ->
+            val toast = Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG)
+            toast.show()
+        }
+        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
         if (FirebaseAuth.getInstance().currentUser == null) {
             val providers: List<AuthUI.IdpConfig> = listOf(
                     AuthUI.IdpConfig.EmailBuilder().build()
@@ -52,6 +64,15 @@ class HomeActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.tool_bar)
+        drawer = findViewById(R.id.drawer)
+        var isLargeScreen: Boolean
+        try {
+            largeScreenList = findViewById(R.id.large_screen_list)
+            isLargeScreen = true
+        }catch (e: NullPointerException) {
+            isLargeScreen = false
+        }
+        viewModel.isLargeScreen = isLargeScreen
         setSupportActionBar(toolbar)
     }
 
@@ -63,7 +84,7 @@ class HomeActivity : AppCompatActivity() {
         if (result.resultCode == RESULT_OK) {
             this.initView()
         } else {
-            val toast = Toast.makeText(RealeStateManagerApplication.getContextApp(),
+            val toast = Toast.makeText(RealStateManagerApplication.contextApp,
                     getString(R.string.error_login), Toast.LENGTH_LONG)
             toast.show()
             logoutToRefreshMainActivity()
@@ -91,6 +112,9 @@ class HomeActivity : AppCompatActivity() {
             R.id.action_create -> {
                 val intent = Intent(this, CreatePropertyActivity::class.java)
                 startActivity(intent)
+            }
+            DRAWER_ICON_ID -> {
+                    drawer.openDrawer(GravityCompat.START)
             }
         }
         return super.onOptionsItemSelected(item)

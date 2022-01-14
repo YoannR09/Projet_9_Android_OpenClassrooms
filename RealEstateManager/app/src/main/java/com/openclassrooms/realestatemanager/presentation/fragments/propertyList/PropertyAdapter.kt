@@ -13,12 +13,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
-import com.openclassrooms.realestatemanager.RealeStateManagerApplication
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivityViewModel
 import java.lang.Exception
 
 
-class PropertyAdapter(data: List<PropertyOnPropertyListFragmentViewModel>?, var viewModel: HomeActivityViewModel, var lifecycleOwner: LifecycleOwner) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
+class PropertyAdapter(
+    data: List<PropertyOnPropertyListFragmentViewModel>?,
+    private var viewModel: HomeActivityViewModel,
+    private var lifecycleOwner: LifecycleOwner
+) : RecyclerView.Adapter<PropertyAdapter.PropertyViewHolder>() {
 
     private var mData: List<PropertyOnPropertyListFragmentViewModel>? = data
     private var context: Context? = null
@@ -57,33 +61,32 @@ class PropertyAdapter(data: List<PropertyOnPropertyListFragmentViewModel>?, var 
     )
         : RecyclerView.ViewHolder(itemView), View.OnClickListener {
 
-        var title: TextView
-        var city: TextView
-        var imageView: ImageView
-        var background: LinearLayout
+        private var title: TextView
+        private var city: TextView
+        private var imageView: ImageView
+        private var background: LinearLayout
+        lateinit var id: String
 
         fun bind(property: PropertyOnPropertyListFragmentViewModel) {
-            viewModel.indexSelected.observe(lifecycleOwner) {
-                index: Number ->
-                run {
-                    if(index == adapterPosition) {
-                        this.background.setBackgroundColor(Color.parseColor("#3F51B5"))
-                    } else {
-                        this.background.setBackgroundColor(Color.WHITE)
-                    }
-                }
+            this.id = property.id
+            viewModel.idSelected.observe(lifecycleOwner) {
+                    id: String ->
+                        if(id === this.id) {
+                            this.background.setBackgroundColor(Color.parseColor("#3F51B5"))
+                        } else {
+                            this.background.setBackgroundColor(Color.WHITE)
+                        }
             }
-
             this.title.text = property.name
             this.city.text = property.city
             val circularProgressDrawable
-                = CircularProgressDrawable(RealeStateManagerApplication.getContextApp())
+                    = CircularProgressDrawable(RealStateManagerApplication.contextApp)
             circularProgressDrawable.strokeWidth = 5f
             circularProgressDrawable.centerRadius = 30f
             circularProgressDrawable.start()
             val url = property.mainPictureUrl
             try {
-                Glide.with(RealeStateManagerApplication.getContextApp())
+                Glide.with(RealStateManagerApplication.contextApp)
                     .load(url)
                     .placeholder(circularProgressDrawable).into(this.imageView)
             } catch (e: Exception) {
@@ -100,7 +103,11 @@ class PropertyAdapter(data: List<PropertyOnPropertyListFragmentViewModel>?, var 
         }
 
         override fun onClick(v: View?) {
-            viewModel.changeSelectIndex(adapterPosition)
+            if(viewModel.isLargeScreen) {
+                viewModel.changeSelectId(this.id)
+            } else {
+                println("data " + adapterPosition + "  "+ this.id)
+            }
         }
     }
 }

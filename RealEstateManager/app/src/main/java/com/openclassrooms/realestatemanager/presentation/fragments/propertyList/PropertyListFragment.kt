@@ -21,7 +21,9 @@ class PropertyListFragment : Fragment() {
 
     private var adapter: PropertyAdapter? = null
     var recyclerView: RecyclerView? = null
-    private lateinit var viewModel: PropertyListFragmentViewModel
+    private val viewModel by lazy {
+        ViewModelProvider(this)[PropertyListFragmentViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,16 +33,12 @@ class PropertyListFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         return try {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
-            viewModel = ViewModelProvider(this)[PropertyListFragmentViewModel::class.java]
             recyclerView = view.findViewById(R.id.rvPropertyList)
             recyclerView?.layoutManager = LinearLayoutManager(activity)
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), it.viewModel, this) }
             recyclerView?.adapter = adapter
             viewModel.properties.observe(this.viewLifecycleOwner) {
-                result ->
-                run {
-                    adapter?.updateList(result)
-                }
+                result -> adapter?.updateList(result)
             }
             viewModel.loadProperties()
             view

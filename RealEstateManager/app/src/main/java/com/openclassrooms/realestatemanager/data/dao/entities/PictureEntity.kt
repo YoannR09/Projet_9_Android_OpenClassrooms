@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PictureEntity(
-        @PrimaryKey var id: String,
-        val url: String,
-        val description: String,
-        val name: String
+    @PrimaryKey val id: String,
+    val url: String,
+    val description: String,
+    val name: String
 )

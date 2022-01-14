@@ -2,12 +2,6 @@ package com.openclassrooms.realestatemanager.presentation.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.RealeStateManagerApplication
-import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
-import kotlinx.coroutines.launch
 
 class HomeActivityViewModel: ViewModel() {
 
@@ -16,8 +10,11 @@ class HomeActivityViewModel: ViewModel() {
     //    emit(data)
     //}
 
-    val indexSelected = MutableLiveData<Number>(0)
+    var isLargeScreen: Boolean = false
 
-    fun changeSelectIndex(index: Number) {
-        indexSelected.value = index
+    val idSelected = MutableLiveData("none")
+
+    fun changeSelectId(id: String) {
+        idSelected.value = id
     }}
+

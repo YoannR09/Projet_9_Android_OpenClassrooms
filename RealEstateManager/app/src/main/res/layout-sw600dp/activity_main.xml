@@ -1,47 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.openclassrooms.realestatemanager.presentation.home.HomeActivity"
-    android:gravity="center">
+    tools:context=".presentation.home.HomeActivity">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.openclassrooms.realestatemanager.presentation.home.HomeActivity"
+        android:gravity="center">
 
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/tool_bar" />
+        <include
+            android:id="@+id/tool_bar"
+            layout="@layout/tool_bar" />
 
-    <ScrollView
-        android:id="@+id/left_part"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintWidth_percent="0.33"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <androidx.fragment.app.FragmentContainerView
-            android:layout_width="match_parent"
+        <ScrollView
+            android:id="@+id/left_part"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintWidth_percent="0.33"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.fragment.app.FragmentContainerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/list_fragment"
+                tools:context=".MapsActivity"
+                android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
+        </ScrollView>
+
+        <View android:id="@+id/tile_divider"
+            app:layout_constraintStart_toEndOf="@id/left_part"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="2dp"
             android:layout_height="wrap_content"
-            android:id="@+id/list_fragment"
-            tools:context=".MapsActivity"
-            android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
-    </ScrollView>
+            android:background="?android:attr/dividerVertical" />
 
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tool_bar"
-        app:layout_constraintStart_toEndOf="@id/left_part"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
-        <androidx.fragment.app.FragmentContainerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/property_fragment"
-            tools:context=".MapsActivity"
-            android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment" />
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/large_screen_list"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar"
+            app:layout_constraintStart_toEndOf="@id/left_part"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.fragment.app.FragmentContainerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/property_fragment"
+                tools:context=".MapsActivity"
+                android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment" />
+        </LinearLayout>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:clipToPadding="false"
+        android:backgroundTint="@color/colorPrimary"
+        >
+    </com.google.android.material.navigation.NavigationView>
+</androidx.drawerlayout.widget.DrawerLayout>

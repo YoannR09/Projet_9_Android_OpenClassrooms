@@ -9,10 +9,12 @@ import com.openclassrooms.realestatemanager.utils.hasInternet
 class Repository {
 
     companion object {
+
         private var propertyRepository: PropertyRepository? = null
         private var localProperyRepository: PropertyRepository? = null
-        private val propertiesDaoRoom: PropertiesDaoRoom?
-        = RealEstateManagerDatabase.instance?.propertiesDaoRoom()
+        private val propertiesDaoRoom by lazy {
+            RealEstateManagerDatabase.instance.propertiesDaoRoom()
+        }
 
         private fun createPropertyRepo() {
             propertyRepository = PropertyRepository(PropertiesDaoImplFirebase())

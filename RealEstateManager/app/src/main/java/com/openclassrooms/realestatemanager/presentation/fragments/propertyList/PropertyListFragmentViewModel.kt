@@ -9,10 +9,10 @@ class PropertyListFragmentViewModel: ViewModel() {
 
     fun loadProperties() {
         val array = ArrayList<PropertyOnPropertyListFragmentViewModel>()
-        array.add(PropertyOnPropertyListFragmentViewModel(city = "city1", name = "name1", price = "50000", mainPictureUrl = "url"))
-        array.add(PropertyOnPropertyListFragmentViewModel(city = "city2", name = "name2", price = "50000", mainPictureUrl = "url"))
-        array.add(PropertyOnPropertyListFragmentViewModel(city = "city3", name = "name3", price = "50000", mainPictureUrl = "url"))
-        array.add(PropertyOnPropertyListFragmentViewModel(city = "city4", name = "name4", price = "50000", mainPictureUrl = "url"))
+        array.add(PropertyOnPropertyListFragmentViewModel(id= "id1",city = "city1", name = "name1", price = "50000", mainPictureUrl = "url"))
+        array.add(PropertyOnPropertyListFragmentViewModel(id= "id2",city = "city2", name = "name2", price = "50000", mainPictureUrl = "url"))
+        array.add(PropertyOnPropertyListFragmentViewModel(id= "id3",city = "city3", name = "name3", price = "50000", mainPictureUrl = "url"))
+        array.add(PropertyOnPropertyListFragmentViewModel(id= "id4",city = "city4", name = "name4", price = "50000", mainPictureUrl = "url"))
         properties.value = array
     }
 
