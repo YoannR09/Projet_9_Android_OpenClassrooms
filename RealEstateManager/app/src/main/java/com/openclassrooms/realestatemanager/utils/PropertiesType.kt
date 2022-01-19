@@ -1,5 +1,5 @@
 package com.openclassrooms.realestatemanager.utils
 
 enum class PropertiesType {
-    APPARTMENT, LOFT, MANOR, HOUSE, STUDIO
+    APARTMENT, LOFT, MANOR, HOUSE, STUDIO
 }

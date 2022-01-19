@@ -65,12 +65,12 @@ class PropertyAdapter(
         private var city: TextView
         private var imageView: ImageView
         private var background: LinearLayout
-        lateinit var id: String
+        var id: Int = 0
 
         fun bind(property: PropertyOnPropertyListFragmentViewModel) {
             this.id = property.id
             viewModel.idSelected.observe(lifecycleOwner) {
-                    id: String ->
+                    id: Int ->
                         if(id === this.id) {
                             this.background.setBackgroundColor(Color.parseColor("#3F51B5"))
                         } else {

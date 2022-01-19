@@ -7,6 +7,7 @@ import com.google.firebase.auth.FirebaseUser
 @Entity
 data class PropertyEntity(
     @PrimaryKey(autoGenerate = true) val id: Int,
+    val name: String,
     val type: String,
     val price: Int,
     val meter: Int,
@@ -18,7 +19,7 @@ data class PropertyEntity(
     val state: String,
     val createDate: String,
     val soldDate: String,
-    val agent: FirebaseUser
+    val agentId: String
 )
 
 

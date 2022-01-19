@@ -7,7 +7,6 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.openclassrooms.realestatemanager.data.dao.PropertiesDaoRoom
-import com.openclassrooms.realestatemanager.data.dao.converters.FirebaseUserConverter
 import com.openclassrooms.realestatemanager.data.dao.converters.PictureEntityConverter
 import com.openclassrooms.realestatemanager.data.dao.converters.StringConverter
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
@@ -21,8 +20,7 @@ import java.util.*
 ], version = 1, exportSchema = false)
 @TypeConverters(
     PictureEntityConverter::class,
-    StringConverter::class,
-    FirebaseUserConverter::class
+    StringConverter::class
 )
 abstract class RealEstateManagerDatabase : RoomDatabase() {
     // --- DAO ---

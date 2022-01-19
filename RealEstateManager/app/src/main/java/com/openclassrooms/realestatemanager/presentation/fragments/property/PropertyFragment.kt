@@ -13,11 +13,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PropertyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PropertyFragment : Fragment() {
 
     private val viewModel by lazy {
@@ -44,10 +39,10 @@ class PropertyFragment : Fragment() {
         }
         (activity as HomeActivity).viewModel.idSelected.observe(viewLifecycleOwner) {
             id ->
-                if(id !== "none") {
+                if(id != 0) {
                     hideNoneProperty()
                     showLoader()
-                    this.viewModel.loadPropertyById(id)
+                    context?.let { this.viewModel.loadPropertyById(it, id) }
                 } else {
                     showNoneProperty()
                 }
@@ -73,11 +68,5 @@ class PropertyFragment : Fragment() {
 
     private fun hideNoneProperty() {
         noneProperty.visibility = GONE
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance() =
-            PropertyFragment()
     }
 }

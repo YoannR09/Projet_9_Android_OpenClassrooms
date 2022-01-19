@@ -12,9 +12,9 @@ class HomeActivityViewModel: ViewModel() {
 
     var isLargeScreen: Boolean = false
 
-    val idSelected = MutableLiveData("none")
+    val idSelected = MutableLiveData(0)
 
-    fun changeSelectId(id: String) {
+    fun changeSelectId(id: Int) {
         idSelected.value = id
     }}
 

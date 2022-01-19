@@ -5,5 +5,19 @@ import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 
 fun PropertyEntity.asModel() =
         PropertyModel(
-                name = "property = " + this.address
+                id,
+                name,
+                type,
+                price,
+                meter,
+                pieces,
+                description,
+                picturesList,
+                address,
+                interestPoints,
+                state,
+                createDate,
+                soldDate,
+                agentId
         )
+
