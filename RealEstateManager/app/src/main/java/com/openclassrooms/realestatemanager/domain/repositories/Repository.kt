@@ -1,8 +1,7 @@
 package com.openclassrooms.realestatemanager.domain.repositories
 
-import android.content.Context
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.data.dao.PropertiesDaoImplFirebase
-import com.openclassrooms.realestatemanager.data.dao.PropertiesDaoRoom
 import com.openclassrooms.realestatemanager.data.database.RealEstateManagerDatabase
 import com.openclassrooms.realestatemanager.utils.hasInternet
 
@@ -24,8 +23,8 @@ class Repository {
             localProperyRepository = PropertyRepository(propertiesDaoRoom!!)
         }
 
-        fun getPropertyRepository(context: Context?): PropertyRepository? {
-            return if(context?.hasInternet == true) {
+        fun getPropertyRepository(): PropertyRepository? {
+            return if(RealStateManagerApplication.context.hasInternet) {
                 if(propertyRepository == null) {
                     createPropertyRepo()
                 }

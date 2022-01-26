@@ -10,12 +10,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
-import com.openclassrooms.realestatemanager.R
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivityViewModel
-import java.lang.Exception
 
 
 class PropertyAdapter(
@@ -63,6 +62,7 @@ class PropertyAdapter(
 
         private var title: TextView
         private var city: TextView
+        private var price: TextView
         private var imageView: ImageView
         private var background: LinearLayout
         var id: Int = 0
@@ -71,14 +71,15 @@ class PropertyAdapter(
             this.id = property.id
             viewModel.idSelected.observe(lifecycleOwner) {
                     id: Int ->
-                        if(id === this.id) {
-                            this.background.setBackgroundColor(Color.parseColor("#3F51B5"))
+                        if(id == this.id) {
+                            selectedItem()
                         } else {
-                            this.background.setBackgroundColor(Color.WHITE)
+                            unselectedItem()
                         }
             }
             this.title.text = property.name
             this.city.text = property.city
+            this.price.text = property.price
             val circularProgressDrawable
                     = CircularProgressDrawable(RealStateManagerApplication.contextApp)
             circularProgressDrawable.strokeWidth = 5f
@@ -100,6 +101,15 @@ class PropertyAdapter(
             this.title = itemView.findViewById(R.id.property_list_title)
             this.city = itemView.findViewById(R.id.property_list_city)
             this.imageView = itemView.findViewById(R.id.image_main_property)
+            this.price = itemView.findViewById(R.id.property_price)
+        }
+
+        private fun selectedItem() {
+            this.background.setBackgroundColor(Color.parseColor("#00695C"))
+        }
+
+        private fun unselectedItem() {
+            this.background.setBackgroundColor(Color.TRANSPARENT)
         }
 
         override fun onClick(v: View?) {

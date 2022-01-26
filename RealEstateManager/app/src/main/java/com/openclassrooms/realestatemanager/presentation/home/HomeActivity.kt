@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -19,15 +18,12 @@ import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
-import com.openclassrooms.realestatemanager.utils.ErrorState.Companion.errorState
-
 
 class HomeActivity : AppCompatActivity() {
     private val DRAWER_ICON_ID = 16908332
     lateinit var viewModel: HomeActivityViewModel
     lateinit var toolbar: MaterialToolbar
     lateinit var drawer: DrawerLayout
-    lateinit var drawerButton: Button
     lateinit var largeScreenList: View
 
     private val signInLauncher = registerForActivityResult(
@@ -35,11 +31,8 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        errorState.observe(this) { msg ->
-            val toast = Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG)
-            toast.show()
-        }
         viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
+
         if (FirebaseAuth.getInstance().currentUser == null) {
             val providers: List<AuthUI.IdpConfig> = listOf(
                     AuthUI.IdpConfig.EmailBuilder().build()
@@ -57,7 +50,6 @@ class HomeActivity : AppCompatActivity() {
         } else {
             this.initView()
         }
-
     }
 
     private fun initView() {

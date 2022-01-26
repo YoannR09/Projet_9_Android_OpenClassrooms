@@ -3,45 +3,286 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:animateLayoutChanges="true"
     tools:context=".presentation.fragments.property.PropertyFragment">
-    <ProgressBar android:id="@+id/loading_spinner"
-        style="?android:progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/none_property"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:visibility="gone">
-        <TextView
+        <ProgressBar
+            tools:visibility="gone"
+            android:id="@+id/loading_spinner"
+            style="?android:progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/none_property"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:text="Welcome to RealEstateManager !"/>
-        <TextView
-            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:visibility="gone">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="20sp"
+                android:text="Welcome to RealEstateManager !"/>
+            <TextView
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="You can select an property on list to see more details"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            tools:visibility="visible"
+            android:visibility="gone"
+            android:id="@+id/property_card"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="You can select an property on list to see more details"/>
-    </LinearLayout>
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/info_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="start">
+                    <TextView
+                        android:id="@+id/price_property"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical"
+                        tools:text="50000 $"/>
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggle_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        android:layout_marginStart="16dp">
+                        <Button
+                            android:id="@+id/toggle_dollar"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:text="$"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                            />
 
+                        <Button
+                            android:id="@+id/toggle_euro"
+                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="€"
+                            android:textSize="16sp" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
 
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/property_card"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/index_test"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="default" />
-    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="end|center_vertical">
 
+                    <TextView
+                        android:id="@+id/property_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"
+                        android:gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:text="SOLD" />
 
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/property_state_info"
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="8dp"
+                        android:src="@drawable/bkg_oval"
+                        android:tint="@android:color/holo_red_dark" />
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:padding="8dp"
+                android:textColor="#4DB6AC"
+                android:text="Media"/>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <androidx.fragment.app.FragmentContainerView
+                    android:layout_width="match_parent"
+                    android:layout_height="125dp"
+                    android:id="@+id/list_picture_fragment"
+                    tools:context=".presentation.home.HomeActivity"
+                    android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.PictureListFragment" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:padding="4dp"
+                android:textColor="#4DB6AC"
+                android:text="Description"/>
+            <TextView
+                android:id="@+id/property_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                tools:text="DOnce available for purchase, the media reports, said there was a huge surge in demand from salaried and independent users.
+According to media reports, a housewife, Shanta Bibi, used the borrowed" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.40"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    >
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp">
+                        <ImageView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/ic_baseline_aspect_ratio_24" />
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Surface"/>
+                            <TextView
+                                android:id="@+id/property_size"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="750m"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp">
+                        <ImageView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/ic_baseline_home_24" />
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Number of rooms"/>
+                            <TextView
+                                android:id="@+id/property_rooms"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="7"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.27"
+                    android:layout_height="wrap_content"
+                    >
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp">
+                        <ImageView
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:layout_margin="8dp"
+                            android:src="@drawable/ic_baseline_location_on_24" />
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Location"/>
+                            <TextView
+                                android:id="@+id/property_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="7"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.33"
+                    android:layout_height="wrap_content"
+                    >
+                    <androidx.fragment.app.FragmentContainerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/map_fragment"
+                        tools:context=".presentation.home.HomeActivity"
+                        android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.MapsFragment" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|end"
+                android:gravity="end|bottom"
+                android:padding="8dp"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/created_by"/>
+                <TextView
+                    android:id="@+id/property_creator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textEnd"
+                    android:textStyle="bold"
+                    tools:text="user@gmail.com"
+                    android:textColor="#4DB6AC"
+                    android:textSize="15sp"/>
+                <TextView
+                    android:id="@+id/created_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    tools:text=", on 06/15/2022"/>
+            </LinearLayout>
+
+        </LinearLayout>
 </FrameLayout>

@@ -1,12 +1,12 @@
 package com.openclassrooms.realestatemanager.data.dao
 
+import android.content.res.Resources
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.utils.ErrorState.Companion.errorState
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
+
 
 class PropertiesDaoImplFirebase : PropertiesDao {
 
@@ -16,12 +16,12 @@ class PropertiesDaoImplFirebase : PropertiesDao {
     override suspend fun list(): List<PropertyEntity> {
         return suspendCoroutine {
             db.collection("property")
-                .document()
                 .get()
-                .addOnCompleteListener {
-                        task ->
+                .addOnCompleteListener { task ->
                     if(task.isSuccessful) {
-                        it.resume(listOf())
+                        it.resume(task.result?.documents?.mapNotNull {
+                            it.toObject(PropertyEntity::class.java)
+                        }?: listOf())
                     } else {
                         it.resume(listOf())
                     }
@@ -29,7 +29,6 @@ class PropertiesDaoImplFirebase : PropertiesDao {
                 .addOnFailureListener {
                         err ->
                     err.printStackTrace()
-                    errorState.value = errorOnFirebase
                 }
         }
     }
@@ -38,37 +37,34 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         return suspendCoroutine {
             db.collection("property")
                 .add(entity!!)
-                .addOnCompleteListener {
-                        result ->
+                .addOnCompleteListener { result ->
                     if(result.isSuccessful) {
                         it.resume(Unit)
                     } else {
                         it.resume(Unit)
                     }
                 }
-                .addOnFailureListener {
-                        err ->
+                .addOnFailureListener { err ->
                     err.printStackTrace()
-                    errorState.value = errorOnFirebase
                 }
         }
     }
 
     override suspend fun getPropertyById(id: Int): PropertyEntity {
-        return suspendCoroutine {
+        return suspendCoroutine { coroutine ->
             db.collection("property")
                 .whereEqualTo("id", id)
                 .get()
-                .addOnCompleteListener {
-                        task ->
+                .addOnCompleteListener { task ->
                     if(task.isSuccessful) {
-                        it.resume(task.result as PropertyEntity)
+                        coroutine.resume(task.result!!.documents.first().toObject(PropertyEntity::class.java)!!)
+                    }else{
+                        throw Resources.NotFoundException()
                     }
                 }
-                .addOnFailureListener {
-                        err ->
+                .addOnFailureListener { err ->
                     err.printStackTrace()
-                    errorState.value = errorOnFirebase
+                    throw Resources.NotFoundException()
                 }
         }
     }

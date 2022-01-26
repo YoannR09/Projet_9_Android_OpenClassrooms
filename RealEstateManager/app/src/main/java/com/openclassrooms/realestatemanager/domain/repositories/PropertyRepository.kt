@@ -7,19 +7,28 @@ import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 
 class PropertyRepository(private val dao: PropertiesDao) {
 
-    suspend fun getList(): List<PropertyModel> {
-        val listModel = ArrayList<PropertyModel>()
-        for(entity in this.dao.list()) {
-            listModel.add(entity.asModel())
+    suspend fun getList(): Result<List<PropertyModel>> {
+        return try {
+            val listModel = ArrayList<PropertyModel>()
+            for(entity in this.dao.list()) {
+                listModel.add(entity.asModel())
+            }
+            Result.success(listModel)
+        }catch (e: Exception){
+            Result.failure(e)
         }
-        return listModel
     }
 
-    suspend fun getPropertyById(id: Int): PropertyModel {
-        return this.dao.getPropertyById(id).asModel()
+    suspend fun getPropertyById(id: Int): Result<PropertyModel> {
+        return try {
+            Result.success(dao.getPropertyById(id).asModel())
+        } catch (e: Exception){
+            e.printStackTrace()
+            Result.failure(e)
+        }
     }
 
     suspend fun createProperty(propertyEntity: PropertyEntity) {
-        return this.dao.createProperty(propertyEntity)
+        return dao.createProperty(propertyEntity)
     }
 }

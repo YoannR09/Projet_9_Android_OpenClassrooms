@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,7 @@ import java.util.*
 class PropertyListFragment : Fragment() {
 
     private var adapter: PropertyAdapter? = null
-    var recyclerView: RecyclerView? = null
+    private lateinit var recyclerView: RecyclerView
     private lateinit var emptyList: TextView
     private val viewModel by lazy {
         ViewModelProvider(this)[PropertyListFragmentViewModel::class.java]
@@ -31,9 +32,9 @@ class PropertyListFragment : Fragment() {
         return try {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
             recyclerView = view.findViewById(R.id.rvPropertyList)
-            recyclerView?.layoutManager = LinearLayoutManager(activity)
+            recyclerView.layoutManager = LinearLayoutManager(activity)
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), it.viewModel, this) }
-            recyclerView?.adapter = adapter
+            recyclerView.adapter = adapter
             this.emptyList = view.findViewById(R.id.empty_list_text)
             viewModel.properties.observe(this.viewLifecycleOwner) {
                 result ->
@@ -44,11 +45,35 @@ class PropertyListFragment : Fragment() {
                 }
                 adapter?.updateList(result)
             }
-            context?.let { viewModel.loadProperties(it) }
+            implScreenState()
+            viewModel.loadProperties()
             view
         } catch (e: Exception) {
             e.printStackTrace()
             inflater.inflate(R.layout.fragment_property_list, container, false)
         }
+    }
+
+    private fun implScreenState() {
+        viewModel
+            .screenState
+            .observe(viewLifecycleOwner) { state ->
+                when(state) {
+                    is ScreenStateError -> {
+                        val toast = Toast.makeText(activity,
+                            "Error, try again", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                    ScreenStateLoading -> {}
+                    ScreenStateNothing -> {}
+                    ScreenStateSuccess -> {
+
+                    }
+                    ScreenStateNoData -> {
+
+                    }
+                    else -> {}
+                }
+            }
     }
 }
