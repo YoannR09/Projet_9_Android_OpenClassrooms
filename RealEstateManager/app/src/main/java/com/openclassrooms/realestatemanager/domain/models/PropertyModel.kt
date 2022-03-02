@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 
 data class PropertyModel (
-        val id: Int,
+        val id: String,
         val name: String,
         val type: String,
         val price: Int,

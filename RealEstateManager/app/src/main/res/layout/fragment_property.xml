@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content">
+<FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     tools:context=".presentation.fragments.property.PropertyFragment">
         <ProgressBar
@@ -149,7 +153,7 @@ According to media reports, a housewife, Shanta Bibi, used the borrowed" />
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="0dp"
-                    android:layout_weight="0.40"
+                    android:layout_weight="0.50"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     >
@@ -209,13 +213,14 @@ According to media reports, a housewife, Shanta Bibi, used the borrowed" />
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="0dp"
-                    android:layout_weight="0.27"
+                    android:layout_weight="0.50"
                     android:layout_height="wrap_content"
                     >
                     <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginTop="16dp"
                         android:padding="8dp">
                         <ImageView
                             android:layout_height="wrap_content"
@@ -239,20 +244,22 @@ According to media reports, a housewife, Shanta Bibi, used the borrowed" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:orientation="vertical">
                 <LinearLayout
                     android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.33"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="16dp"
                     >
-                    <androidx.fragment.app.FragmentContainerView
+                    <ImageView
+                        android:id="@+id/image_map_property"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:id="@+id/map_fragment"
-                        tools:context=".presentation.home.HomeActivity"
-                        android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.MapsFragment" />
+                        android:layout_height="match_parent"/>
                 </LinearLayout>
-
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -283,6 +290,6 @@ According to media reports, a housewife, Shanta Bibi, used the borrowed" />
                     android:textStyle="italic"
                     tools:text=", on 06/15/2022"/>
             </LinearLayout>
-
         </LinearLayout>
 </FrameLayout>
+    </ScrollView>

@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class PropertyEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey
+    val id: String = "",
     val name: String = "",
     val type: String = "",
     val price: Int = 0,
@@ -20,5 +21,5 @@ data class PropertyEntity(
     val soldDate: String= "",
     val agentId: String = ""
 ) {
-    constructor() : this(0)
+    constructor() : this("id")
 }

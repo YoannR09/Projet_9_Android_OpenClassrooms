@@ -15,8 +15,8 @@ interface PropertiesDaoRoom : PropertiesDao {
     override suspend fun createProperty(entity: PropertyEntity?)
 
     @Query("DELETE FROM propertyentity WHERE id = :id")
-    override fun deleteProperty(id: Int)
+    override fun deleteProperty(id: String)
 
     @Query("SELECT * FROM propertyentity WHERE id = :id")
-    override suspend fun getPropertyById(id: Int): PropertyEntity
+    override suspend fun getPropertyById(id: String): PropertyEntity
 }

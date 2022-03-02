@@ -65,12 +65,12 @@ class PropertyAdapter(
         private var price: TextView
         private var imageView: ImageView
         private var background: LinearLayout
-        var id: Int = 0
+        var id: String = "id"
 
         fun bind(property: PropertyOnPropertyListFragmentViewModel) {
             this.id = property.id
             viewModel.idSelected.observe(lifecycleOwner) {
-                    id: Int ->
+                    id: String ->
                         if(id == this.id) {
                             selectedItem()
                         } else {

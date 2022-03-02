@@ -10,7 +10,6 @@ import kotlin.coroutines.suspendCoroutine
 
 class PropertiesDaoImplFirebase : PropertiesDao {
 
-    private val errorOnFirebase = "Error... Sorry, retry later"
     private val db = Firebase.firestore
 
     override suspend fun list(): List<PropertyEntity> {
@@ -50,7 +49,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
-    override suspend fun getPropertyById(id: Int): PropertyEntity {
+    override suspend fun getPropertyById(id: String): PropertyEntity {
         return suspendCoroutine { coroutine ->
             db.collection("property")
                 .whereEqualTo("id", id)
@@ -72,7 +71,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
     /**
      * Shouldn't be impl on this project
      */
-    override fun deleteProperty(id: Int) {
+    override fun deleteProperty(id: String) {
         TODO("Not yet implemented")
     }
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
+import com.openclassrooms.realestatemanager.utils.observe
 import java.util.*
 
 class PropertyListFragment : Fragment() {

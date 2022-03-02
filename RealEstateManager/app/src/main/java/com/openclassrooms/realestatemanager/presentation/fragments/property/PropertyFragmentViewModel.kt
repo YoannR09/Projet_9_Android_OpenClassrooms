@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyByIdUseCase
 import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 
@@ -19,19 +19,20 @@ object ScreenStateNoData: ScreenStatePropertyFragment()
 
 class PropertyFragmentViewModel: ViewModel() {
 
-    val screenState = MutableLiveData<ScreenStatePropertyFragment>(ScreenStateNothing)
+    val screenState = MutableStateFlow<ScreenStatePropertyFragment>(ScreenStateNothing)
     val property = MutableLiveData<PropertyOnPropertyFragmentViewModel>()
 
-    fun loadPropertyById(id: Int) {
+    fun loadPropertyById(id: String) {
         screenState.value = ScreenStateLoading
         viewModelScope.launch {
             GetPropertyByIdUseCase()
                 .get(id)
+                .onFailure {
+                    screenState.value = ScreenStateError(it.message ?: "We have an error")
+                }
                 .onSuccess {
                     screenState.value = ScreenStateSuccess
                     property.value = it.asPropertyViewModel()
-                }.onFailure {
-                    screenState.value = ScreenStateError(it.message ?: "We have an error")
                 }
         }
     }

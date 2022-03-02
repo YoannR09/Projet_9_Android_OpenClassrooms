@@ -7,19 +7,20 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.utils.PropertyState
 import com.openclassrooms.realestatemanager.utils.Utils.convertDollarToEuro
+import com.openclassrooms.realestatemanager.utils.observe
 import org.w3c.dom.Text
 
 class PropertyFragment : Fragment() {
@@ -38,6 +39,7 @@ class PropertyFragment : Fragment() {
     private val state: TextView get() = requireView().findViewById(R.id.property_state)
     private val price: TextView get() = requireView().findViewById(R.id.price_property)
     private val toggleButton: MaterialButtonToggleGroup get() = requireView().findViewById(R.id.toggle_button)
+    private val map: ImageView get() = requireView().findViewById(R.id.image_map_property)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,6 +54,21 @@ class PropertyFragment : Fragment() {
             .observe(viewLifecycleOwner) { propertySelected ->
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
+                val latEiffelTower = "48.858235";
+                val lngEiffelTower = "2.294571";
+                val url = "https://maps.google.com/maps/api/staticmap?center="+ latEiffelTower + "," + lngEiffelTower+ "&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
+                val circularProgressDrawable
+                        = CircularProgressDrawable(RealStateManagerApplication.contextApp)
+                circularProgressDrawable.strokeWidth = 5f
+                circularProgressDrawable.centerRadius = 30f
+                circularProgressDrawable.start()
+                try {
+                    Glide.with(RealStateManagerApplication.contextApp)
+                        .load(url)
+                        .placeholder(circularProgressDrawable).into(this.map)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 toggleButton.check(dollarId)
                 toggleButton.addOnButtonCheckedListener{ group, checkedId, _ ->
                     if (group.checkedButtonId == -1) {
@@ -79,7 +96,7 @@ class PropertyFragment : Fragment() {
         (activity as HomeActivity).viewModel
             .idSelected
             .observe(viewLifecycleOwner) { id ->
-                if(id != 0) {
+                if(id != "id") {
                     viewModel.loadPropertyById(id)
                 } else {
                     viewModel.screenState.value = ScreenStateNoData

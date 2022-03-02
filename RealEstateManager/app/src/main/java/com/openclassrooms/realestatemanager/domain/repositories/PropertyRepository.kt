@@ -19,7 +19,7 @@ class PropertyRepository(private val dao: PropertiesDao) {
         }
     }
 
-    suspend fun getPropertyById(id: Int): Result<PropertyModel> {
+    suspend fun getPropertyById(id: String): Result<PropertyModel> {
         return try {
             Result.success(dao.getPropertyById(id).asModel())
         } catch (e: Exception){

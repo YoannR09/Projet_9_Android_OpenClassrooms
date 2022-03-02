@@ -5,32 +5,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.create.CreatePropertyActivity">
-    <LinearLayout
-        android:orientation="vertical"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/top_bar_create">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Create a property"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/top_bar_create"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp"
+        android:elevation="5dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="General informations"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:startIconDrawable="@drawable/fui_ic_facebook_white_22dp"
-            android:hint="test">
-
-            <com.google.android.material.textfield.TextInputEditText
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <TextView
+                android:id="@+id/stepper_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current step"
+                tools:text="Current step"/>
+            <TextView
+                android:id="@+id/stepper_percent"
+                android:layout_marginStart="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
+                android:text="0%"
+                tools:text="0%"/>
+        </LinearLayout>
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/stepper"
+            app:trackThickness="8dp"
+            app:trackCornerRadius="2dp"
+            app:trackColor="@color/colorPrimary"
+            android:progress="40"
+            tools:indeterminate="true"/>
+        <FrameLayout
+            app:layout_constraintTop_toBottomOf="@id/stepper"
+            android:id="@+id/create_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/create_button_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PREVIOUS"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/create_button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="NEXT"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/create_button_confirm"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="CREATE"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 <Button
+    android:visibility="gone"
     android:id="@+id/test_add"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
