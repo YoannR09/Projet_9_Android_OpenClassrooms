@@ -4,12 +4,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.create.PicturesStepFragment">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/input_no_pictures"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="16sp"
         android:text="No pictures selected" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add picture"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:padding="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Address">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:padding="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Piece">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_picture_piece"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:padding="6dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:hint="Description">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_picture_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/select_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select picture"/>
+        <Button
+            android:id="@+id/upload_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload picture"/>
+
+    </LinearLayout>
 </FrameLayout>

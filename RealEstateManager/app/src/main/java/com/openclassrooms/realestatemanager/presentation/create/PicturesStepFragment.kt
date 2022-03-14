@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.create
 
-import android.app.Activity
+import android.Manifest
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,13 +17,39 @@ import pl.aprilapps.easyphotopicker.MediaFile
 import pl.aprilapps.easyphotopicker.DefaultCallback
 
 import android.content.Intent
-
-
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.widget.Button
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
 
 
 class PicturesStepFragment : Fragment() {
 
+    private val inputPiece get() = requireView().findViewById<TextInputEditText>(R.id.input_picture_piece)
+    private val inputDescription get() = requireView().findViewById<TextInputEditText>(R.id.input_picture_description)
+    private val buttonSelectPicture get() = requireView().findViewById<Button>(R.id.select_picture)
+    private val buttonUpload get() = requireView().findViewById<Button>(R.id.upload_picture)
+
     private lateinit var easyImage: EasyImage
+
+    private lateinit var fileToUpdate: ByteArray
+
+    var storage: FirebaseStorage? = null
+    var storageReference: StorageReference? = null
+
+    // Create a storage reference from our app
+    private val storageRef = storage?.reference
+
+    // Create a reference to "mountains.jpg"
+    private val mountainsRef = storageRef?.child("property/t.jpg")
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,34 +63,79 @@ class PicturesStepFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val easyImage: EasyImage = EasyImage.Builder(requireContext()) // Chooser only
+
+        buttonSelectPicture.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.CAMERA), 111)
+            } else {
+                pickPictures()
+            }
+        }
+
+        buttonUpload.setOnClickListener {
+            uploadPicture()
+        }
+    }
+
+    private fun pickPictures() {
+        easyImage = EasyImage.Builder(requireContext()) // Chooser only
             .setChooserType(ChooserType.CAMERA_AND_GALLERY)
             .setCopyImagesToPublicGalleryFolder(false) // Sets the name for images stored if setCopyImagesToPublicGalleryFolder = true
             .setFolderName("EasyImage sample") // Allow multiple picking
-            .allowMultiple(true)
+            .allowMultiple(false)
             .build()
-        easyImage.openCameraForImage(this)
+        easyImage.openChooser(this)
+    }
+
+    private fun uploadPicture() {
+        val uploadTask = mountainsRef?.putBytes(fileToUpdate)
+        uploadTask?.addOnFailureListener {
+            println("error here picture upload failed")
+            (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
+        }?.addOnSuccessListener { taskSnapshot ->
+            println("success full added here")
+            inputDescription.text?.clear()
+            inputPiece.text?.clear()
+            (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateSuccess("Success")
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        pickPictures()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        easyImage.handleActivityResult(
-            requestCode,
-            resultCode,
-            data,
-            activity as Activity,
-            object : DefaultCallback() {
-                override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+        if(requestCode == 111) {
+            pickPictures()
+        } else {
+            easyImage.handleActivityResult(
+                requestCode,
+                resultCode,
+                data,
+                requireActivity(),
+                object : DefaultCallback() {
+                    override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
+                        val bitmap = BitmapFactory.decodeFile(imageFiles[0].file.path)
+                        val baos = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                        fileToUpdate = baos.toByteArray()
+                    }
 
-                }
+                    override fun onImagePickerError(error: Throwable, source: MediaSource) {
+                        //Some error handling
+                        error.printStackTrace()
+                    }
 
-                override fun onImagePickerError(error: Throwable, source: MediaSource) {
-                    //Some error handling
-                    error.printStackTrace()
-                }
-
-                override fun onCanceled(source: MediaSource) {
-                    //Not necessary to remove any files manually anymore
-                }
-            })
+                    override fun onCanceled(source: MediaSource) {
+                        //Not necessary to remove any files manually anymore
+                    }
+                })
+        }
     }
 }

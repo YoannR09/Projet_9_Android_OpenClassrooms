@@ -54,6 +54,17 @@ class PropertyFragment : Fragment() {
             .observe(viewLifecycleOwner) { propertySelected ->
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
+                // TODO
+                /*
+                Geocoder geocoder = new Geocoder(<your context>);
+                List<Address> addresses;
+                addresses = geocoder.getFromLocationName(<String address>, 1);
+                if(addresses.size() > 0) {
+                    double latitude= addresses.get(0).getLatitude();
+                    double longitude= addresses.get(0).getLongitude();
+                }
+                */
+
                 val latEiffelTower = "48.858235";
                 val lngEiffelTower = "2.294571";
                 val url = "https://maps.google.com/maps/api/staticmap?center="+ latEiffelTower + "," + lngEiffelTower+ "&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"

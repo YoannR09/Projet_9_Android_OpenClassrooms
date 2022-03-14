@@ -73,7 +73,6 @@ class PropertyListFragment : Fragment() {
                     ScreenStateNoData -> {
 
                     }
-                    else -> {}
                 }
             }
     }

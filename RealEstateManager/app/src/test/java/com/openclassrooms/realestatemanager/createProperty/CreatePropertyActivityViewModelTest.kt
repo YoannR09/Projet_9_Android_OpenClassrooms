@@ -1,16 +1,18 @@
 package com.openclassrooms.realestatemanager.createProperty
 
 import android.view.View
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.openclassrooms.realestatemanager.getOrAwaitValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivityViewModel
+import com.openclassrooms.realestatemanager.utils._viewModelScope
+import com.openclassrooms.realestatemanager.utils.scope
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.newSingleThreadContext
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.*
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -19,35 +21,38 @@ import org.junit.runners.JUnit4
 class CreatePropertyActivityViewModelTest {
 
     private lateinit var model: CreatePropertyActivityViewModel
+    @ExperimentalCoroutinesApi
+    private val mainThreadSurrogate = UnconfinedTestDispatcher()
 
-    private val mainThreadSurrogate = TestCoroutineDispatcher()
-
+    @ExperimentalCoroutinesApi
     @Before
-    fun setUp() {
+    fun before() {
         Dispatchers.setMain(mainThreadSurrogate)
         model = CreatePropertyActivityViewModel()
+        _viewModelScope = TestScope(mainThreadSurrogate)
     }
 
     @After
     fun tearDown() {
-        Dispatchers.resetMain() // reset the main dispatcher to the original Main dispatcher
-        mainThreadSurrogate.cleanupTestCoroutines()
+        _viewModelScope = null
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkStepTitle() = runBlockingTest {
+    fun checkStepTitle() = runTest {
         model.currentStep.value = 0
-        assertTrue(model.stepperTitle.value == "")
+        assertTrue(model.stepperTitle.value == "Enter your general information")
         model.currentStep.value = 1
-        assertTrue(model.stepperTitle.value == "Enter your pictures list")
+        assertTrue(model.stepperTitle.value == "Enter your purchase information")
         model.currentStep.value = 2
+        assertTrue(model.stepperTitle.value == "Select your picture")
+        model.currentStep.value = 3
         assertTrue(model.stepperTitle.value == "Confirm your property")
-        model.currentStep.value = 99
-        assertTrue(model.stepperTitle.value == "")
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkStepperPercent() = runBlockingTest {
+    fun checkStepperPercent() = runTest {
         model.currentStep.value = 0
         assertTrue(model.stepperPercent.value == 0)
         model.currentStep.value = 1
@@ -58,25 +63,28 @@ class CreatePropertyActivityViewModelTest {
         assertTrue(model.stepperPercent.value == 100)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkPreviousStep() = runBlockingTest {
+    fun checkPreviousStep() = runTest {
         model.currentStep.value = 0
         assertTrue(model.previousStep.value == View.GONE)
         model.currentStep.value = 3
         assertTrue(model.previousStep.value == View.VISIBLE)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkNextStep() {
-        model.currentStep.value = 4
-        println("here ${model.nextStep.value}")
-        assertTrue(model.nextStep.value == View.GONE)
+    fun checkNextStep() = runTest {
+        model.currentStep.value = 3
+        println("here ${model.nextStepIsVisible.value}")
+        assertTrue(!model.nextStepIsVisible.value)
         model.currentStep.value = 2
-        assertTrue(model.nextStep.value == View.VISIBLE)
+        assertTrue(model.nextStepIsVisible.value)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkFormGeeneralInfo() {
+    fun checkFormGeeneralInfo() = runTest {
         model.address.value = "address"
         model.type.value = "value"
         model.description.value = "description"
@@ -85,8 +93,9 @@ class CreatePropertyActivityViewModelTest {
         assertTrue(!model.generalInfoCheckForm.value)
     }
 
+    @ExperimentalCoroutinesApi
     @Test
-    fun checkFormPurchaseInfo() {
+    fun checkFormPurchaseInfo() = runTest {
         model.price.value = 50000
         model.pieces.value = 4
         model.size.value = 102

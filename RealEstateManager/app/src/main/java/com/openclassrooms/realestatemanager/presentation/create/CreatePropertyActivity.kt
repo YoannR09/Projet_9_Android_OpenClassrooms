@@ -3,8 +3,10 @@ package com.openclassrooms.realestatemanager.presentation.create
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -31,8 +33,6 @@ class CreatePropertyActivity : AppCompatActivity() {
     private val picturesStepFragment by lazy(::PicturesStepFragment)
     private val confirmStepFragment by lazy(::ConfirmStepFragment)
 
-    val interestSelected: ArrayList<String> = ArrayList()
-
     private val fm: FragmentManager = supportFragmentManager
     var previousStep: Int = 0
 
@@ -49,6 +49,8 @@ class CreatePropertyActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         appBar.setTitleTextColor(Color.WHITE)
+
+        implScreenState()
 
         viewModel.nextButtonIsEnabled.observe(this) {
             next.isEnabled = it
@@ -68,7 +70,12 @@ class CreatePropertyActivity : AppCompatActivity() {
 
         viewModel.previousStep.observe(this, previous::setVisibility)
 
-        viewModel.nextStep.observe(this, next::setVisibility)
+        viewModel.nextStepIsVisible.observe(this, {
+            next.visibility = when(it) {
+                true -> View.VISIBLE
+                false -> View.GONE
+            }
+        })
 
         viewModel.confirmButton.observe(this, confirm::setVisibility)
 
@@ -91,11 +98,11 @@ class CreatePropertyActivity : AppCompatActivity() {
         }
 
         previous.setOnClickListener {
-            viewModel.currentStep.value = viewModel.currentStep.value!! - 1
+            viewModel.currentStep.value = viewModel.currentStep.value - 1
         }
 
         next.setOnClickListener {
-            viewModel.currentStep.value = viewModel.currentStep.value!! + 1
+            viewModel.currentStep.value = viewModel.currentStep.value + 1
         }
 
         confirm.setOnClickListener {
@@ -105,6 +112,26 @@ class CreatePropertyActivity : AppCompatActivity() {
             }
             viewModel.createProperty(startActivity)
         }
+    }
+
+    private fun implScreenState() {
+        viewModel
+            .screenState
+            .observe(this) { state ->
+                when(state) {
+                    is ScreenStateError -> {
+                        val toast = Toast.makeText(this,
+                            "Error, try again", Toast.LENGTH_LONG)
+                        toast.show()
+                    }
+                    ScreenStateLoading -> {}
+                    ScreenStateNothing -> {}
+                    is ScreenStateSuccess -> {}
+                    ScreenStateNoData -> {
+
+                    }
+                }
+            }
     }
 
     override fun onSupportNavigateUp(): Boolean {

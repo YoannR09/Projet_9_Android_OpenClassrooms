@@ -2,21 +2,25 @@ package com.openclassrooms.realestatemanager.presentation.create
 
 import android.view.View
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.usecases.property.CreatePropertyUseCase
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
-import com.openclassrooms.realestatemanager.utils.PropertyState
-import com.openclassrooms.realestatemanager.utils.combineStateFlows
-import com.openclassrooms.realestatemanager.utils.flatMapState
-import com.openclassrooms.realestatemanager.utils.mapState
+import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+
+sealed class ScreenStateCreateProperty
+
+data class ScreenStateError(val error: String) : ScreenStateCreateProperty()
+object ScreenStateNothing: ScreenStateCreateProperty()
+object ScreenStateLoading: ScreenStateCreateProperty()
+data class ScreenStateSuccess(val success: String): ScreenStateCreateProperty()
+object ScreenStateNoData: ScreenStateCreateProperty()
 
 
 class CreatePropertyActivityViewModel: ViewModel() {
@@ -25,10 +29,12 @@ class CreatePropertyActivityViewModel: ViewModel() {
 
     val interest get() = PropertyInterestPointUiModel.values()
 
+    val screenState = MutableStateFlow<ScreenStateCreateProperty>(ScreenStateNothing)
+
     val currentStep = MutableStateFlow(0)
 
     val nextButtonIsEnabled by lazy {
-        currentStep.flatMapState(viewModelScope) {
+        currentStep.flatMapState(scope) {
             when(it) {
                 0 -> generalInfoCheckForm
                 1 -> purchaseInfoCheckForm
@@ -38,7 +44,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val stepperTitle = currentStep.mapState(viewModelScope) {
+    val stepperTitle = currentStep.mapState(scope) {
         when(it) {
             0 -> "Enter your general information"
             1 -> "Enter your purchase information"
@@ -48,7 +54,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val stepperPercent = currentStep.mapState(viewModelScope) {
+    val stepperPercent = currentStep.mapState(scope) {
         when(it) {
             0 -> 0
             1 -> 33
@@ -57,7 +63,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val previousStep = currentStep.mapState(viewModelScope) {
+    val previousStep = currentStep.mapState(scope) {
         if(it == 0) {
            View.GONE
         } else {
@@ -65,7 +71,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val confirmButton = currentStep.mapState(viewModelScope) {
+    val confirmButton = currentStep.mapState(scope) {
         if(it == 3) {
             View.VISIBLE
         } else {
@@ -73,12 +79,8 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val nextStep = currentStep.mapState(viewModelScope) {
-        if(it == 3) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
+    val nextStepIsVisible = currentStep.mapState(scope) {
+       it != 3
     }
 
     //region Information
@@ -96,7 +98,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
 
     val pictureList = MutableStateFlow(listOf<List<PictureEntity>>())
 
-    val generalInfoCheckForm = combineStateFlows(viewModelScope, address, description, type) { address, description, type ->
+    val generalInfoCheckForm = combineStateFlows(scope, address, description, type) { address, description, type ->
         when {
             address.isEmpty() -> false
             description.isEmpty() -> false
@@ -105,7 +107,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    val purchaseInfoCheckForm = combineStateFlows(viewModelScope, size, pieces, price) {size, pieces, price ->
+    val purchaseInfoCheckForm = combineStateFlows(scope, size, pieces, price) {size, pieces, price ->
         when {
             size == 0 -> false
             pieces == 0 -> false
@@ -131,7 +133,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
                 soldDate = "",
                 agentId = FirebaseAuth.getInstance().currentUser!!.email!!
             )
-            viewModelScope.launch {
+            scope.launch {
                 CreatePropertyUseCase().createProperty(newProperty)
                 startActivity()
             }
