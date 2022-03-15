@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyByIdUseCase
 import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyViewModel
+import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,7 @@ class PropertyFragmentViewModel: ViewModel() {
 
     fun loadPropertyById(id: String) {
         screenState.value = ScreenStateLoading
-        viewModelScope.launch {
+        scope.launch {
             GetPropertyByIdUseCase()
                 .get(id)
                 .onFailure {

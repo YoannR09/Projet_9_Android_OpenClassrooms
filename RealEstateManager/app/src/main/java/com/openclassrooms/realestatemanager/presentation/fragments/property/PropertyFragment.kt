@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.presentation.fragments.property
 
 import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +23,6 @@ import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.utils.PropertyState
 import com.openclassrooms.realestatemanager.utils.Utils.convertDollarToEuro
 import com.openclassrooms.realestatemanager.utils.observe
-import org.w3c.dom.Text
 
 class PropertyFragment : Fragment() {
 
@@ -54,20 +55,17 @@ class PropertyFragment : Fragment() {
             .observe(viewLifecycleOwner) { propertySelected ->
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
-                // TODO
-                /*
-                Geocoder geocoder = new Geocoder(<your context>);
-                List<Address> addresses;
-                addresses = geocoder.getFromLocationName(<String address>, 1);
-                if(addresses.size() > 0) {
-                    double latitude= addresses.get(0).getLatitude();
-                    double longitude= addresses.get(0).getLongitude();
-                }
-                */
 
-                val latEiffelTower = "48.858235";
-                val lngEiffelTower = "2.294571";
-                val url = "https://maps.google.com/maps/api/staticmap?center="+ latEiffelTower + "," + lngEiffelTower+ "&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
+                var latitude = 48.858235
+                var longitude = 2.294571
+
+                val geoCoder = Geocoder(context)
+                val address: List<Address> = geoCoder.getFromLocationName(propertySelected.city, 1)
+                if(address.isNotEmpty()) {
+                    latitude = address[0].latitude;
+                    longitude = address[0].longitude;
+                }
+                val url = "https://maps.google.com/maps/api/staticmap?center="+ latitude + "," + longitude+ "&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
                 val circularProgressDrawable
                         = CircularProgressDrawable(RealStateManagerApplication.contextApp)
                 circularProgressDrawable.strokeWidth = 5f

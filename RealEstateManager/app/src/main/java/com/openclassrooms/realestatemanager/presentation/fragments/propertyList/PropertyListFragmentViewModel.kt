@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
+import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -21,7 +22,7 @@ class PropertyListFragmentViewModel: ViewModel() {
     val screenState = MutableStateFlow<ScreenStatePropertyListFragment>(ScreenStateNothing)
 
     fun loadProperties() {
-        viewModelScope.launch {
+        scope.launch {
             GetPropertyListUseCase().getList()
                 .onSuccess {
                     screenState.value = ScreenStateSuccess
