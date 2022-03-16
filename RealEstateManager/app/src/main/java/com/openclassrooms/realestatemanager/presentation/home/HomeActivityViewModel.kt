@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.presentation.home
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class HomeActivityViewModel: ViewModel() {
 
@@ -12,7 +13,7 @@ class HomeActivityViewModel: ViewModel() {
 
     var isLargeScreen: Boolean = false
 
-    val idSelected = MutableLiveData("id")
+    val idSelected = MutableStateFlow("id")
 
     fun changeSelectId(id: String) {
         idSelected.value = id

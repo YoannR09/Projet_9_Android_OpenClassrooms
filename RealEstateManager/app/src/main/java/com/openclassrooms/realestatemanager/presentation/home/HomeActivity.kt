@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -14,6 +15,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
@@ -23,8 +25,10 @@ class HomeActivity : AppCompatActivity() {
     private val DRAWER_ICON_ID = 16908332
     lateinit var viewModel: HomeActivityViewModel
     lateinit var toolbar: MaterialToolbar
+    lateinit var agent: TextView
     lateinit var drawer: DrawerLayout
     lateinit var largeScreenList: View
+    lateinit var navigationView: NavigationView
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -53,10 +57,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        viewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.tool_bar)
         drawer = findViewById(R.id.drawer)
+        navigationView = findViewById(R.id.navigation_view)
+        agent = navigationView.getHeaderView(0).findViewById(R.id.agent_title)
+        agent.text = FirebaseAuth.getInstance().currentUser?.email
         var isLargeScreen: Boolean
         try {
             largeScreenList = findViewById(R.id.large_screen_list)

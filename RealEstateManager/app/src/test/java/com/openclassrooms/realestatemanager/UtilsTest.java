@@ -18,7 +18,11 @@ public class UtilsTest {
 
         // THEN
         assertEquals(date.substring(0, 2), String.valueOf(new Date().getDate()));
-        assertEquals(date.substring(3, 5), String.valueOf(new Date().getMonth() + 1));
+        if(new Date().getMonth() + 1 < 10) {
+            assertEquals(date.substring(3, 5), '0' + String.valueOf(new Date().getMonth() + 1));
+        } else {
+            assertEquals(date.substring(3, 5), String.valueOf(new Date().getMonth() + 1));
+        }
         assertEquals(date.substring(6, 10), String.valueOf(new Date().getYear() + 1900));
     }
 

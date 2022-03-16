@@ -24,9 +24,13 @@ import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 
 class PicturesStepFragment : Fragment() {
@@ -42,14 +46,6 @@ class PicturesStepFragment : Fragment() {
 
     var storage: FirebaseStorage? = null
     var storageReference: StorageReference? = null
-
-    // Create a storage reference from our app
-    private val storageRef = storage?.reference
-
-    // Create a reference to "mountains.jpg"
-    private val mountainsRef = storageRef?.child("property/t.jpg")
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,12 +85,23 @@ class PicturesStepFragment : Fragment() {
     }
 
     private fun uploadPicture() {
+        val storageRef = storage?.reference
+        val newPictureId = "property/${FirebaseAuth.getInstance().currentUser?.email}/${inputPiece.text}-${Date().time}.jpg"
+        val mountainsRef = storageRef?.child(newPictureId)
         val uploadTask = mountainsRef?.putBytes(fileToUpdate)
         uploadTask?.addOnFailureListener {
             println("error here picture upload failed")
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
         }?.addOnSuccessListener { taskSnapshot ->
             println("success full added here")
+            (requireActivity() as CreatePropertyActivity).viewModel.pictureList.value.plus(
+                PictureEntity(
+                    newPictureId,
+                    newPictureId,
+                    inputDescription.text.toString(),
+                    inputPiece.text.toString()
+                )
+            )
             inputDescription.text?.clear()
             inputPiece.text?.clear()
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateSuccess("Success")

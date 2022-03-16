@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivityViewModel
+import com.openclassrooms.realestatemanager.utils.observe
 
 
 class PropertyAdapter(
