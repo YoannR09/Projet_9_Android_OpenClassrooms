@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
+import com.openclassrooms.realestatemanager.utils.InterestPoint
 import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +32,18 @@ class PropertyListFragmentViewModel: ViewModel() {
                     screenState.value = ScreenStateError(it.message ?: "We have an error")
                 }
         }
+    }
+
+    fun filterBySize(min: Int, max: Int) {
+        properties.value.filter { (it.size in min..max) }
+    }
+
+    fun filterByType(type: List<String>) {
+        properties.value.filter { type.contains(it.name)}
+    }
+
+    fun filterByInterestPoint(type: List<InterestPoint>) {
+        //properties.value.filter { type.contains(it)}
     }
 
 

@@ -1,35 +1,26 @@
 package com.openclassrooms.realestatemanager.presentation.create
 
+
 import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.openclassrooms.realestatemanager.R
-import pl.aprilapps.easyphotopicker.ChooserType
-import pl.aprilapps.easyphotopicker.EasyImage
-import pl.aprilapps.easyphotopicker.MediaSource
-
-
-import pl.aprilapps.easyphotopicker.MediaFile
-
-import pl.aprilapps.easyphotopicker.DefaultCallback
-
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
-import java.io.ByteArrayOutputStream
+import kotlinx.coroutines.flow.update
+import pl.aprilapps.easyphotopicker.*
+import java.io.File
+import java.io.FileInputStream
 import java.util.*
 
 
@@ -42,10 +33,9 @@ class PicturesStepFragment : Fragment() {
 
     private lateinit var easyImage: EasyImage
 
-    private lateinit var fileToUpdate: ByteArray
+    private lateinit var fileToUpdate: File
 
-    var storage: FirebaseStorage? = null
-    var storageReference: StorageReference? = null
+    var storage: FirebaseStorage = FirebaseStorage.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,23 +75,23 @@ class PicturesStepFragment : Fragment() {
     }
 
     private fun uploadPicture() {
-        val storageRef = storage?.reference
+        val storageRef = storage.reference
         val newPictureId = "property/${FirebaseAuth.getInstance().currentUser?.email}/${inputPiece.text}-${Date().time}.jpg"
-        val mountainsRef = storageRef?.child(newPictureId)
-        val uploadTask = mountainsRef?.putBytes(fileToUpdate)
-        uploadTask?.addOnFailureListener {
+        val mountainsRef = storageRef.child(newPictureId)
+        val uploadTask = mountainsRef.putStream(FileInputStream(fileToUpdate))
+        uploadTask.addOnFailureListener {
             println("error here picture upload failed")
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
-        }?.addOnSuccessListener { taskSnapshot ->
+        }.addOnSuccessListener { taskSnapshot ->
             println("success full added here")
-            (requireActivity() as CreatePropertyActivity).viewModel.pictureList.value.plus(
-                PictureEntity(
+            (requireActivity() as CreatePropertyActivity).viewModel.pictureList.update {
+                it.toMutableList().plus(PictureEntity(
                     newPictureId,
                     newPictureId,
                     inputDescription.text.toString(),
                     inputPiece.text.toString()
-                )
-            )
+                ))
+            }
             inputDescription.text?.clear()
             inputPiece.text?.clear()
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateSuccess("Success")
@@ -128,10 +118,7 @@ class PicturesStepFragment : Fragment() {
                 requireActivity(),
                 object : DefaultCallback() {
                     override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
-                        val bitmap = BitmapFactory.decodeFile(imageFiles[0].file.path)
-                        val baos = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                        fileToUpdate = baos.toByteArray()
+                        fileToUpdate = imageFiles[0].file
                     }
 
                     override fun onImagePickerError(error: Throwable, source: MediaSource) {

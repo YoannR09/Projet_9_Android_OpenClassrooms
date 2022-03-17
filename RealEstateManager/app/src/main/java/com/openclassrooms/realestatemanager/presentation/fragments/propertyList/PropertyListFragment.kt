@@ -37,7 +37,7 @@ class PropertyListFragment : Fragment() {
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), it.viewModel, this) }
             recyclerView.adapter = adapter
             this.emptyList = view.findViewById(R.id.empty_list_text)
-            viewModel.properties.observe(this.viewLifecycleOwner) {
+            viewModel.properties.observe(this) {
                 result ->
                 if(result.isEmpty()) {
                     this.emptyList.visibility = View.VISIBLE

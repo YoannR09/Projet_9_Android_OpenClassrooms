@@ -11,7 +11,8 @@ fun PropertyModel.asPropertyListViewModel() =
         name = name,
         city = address,
         price = price.toString(),
-        mainPictureUrl = propertyPicturesEmpty(picturesList)
+        mainPictureUrl = propertyPicturesEmpty(picturesList),
+        size = meter
     )
 
 fun PropertyModel.asPropertyViewModel() =

@@ -5,4 +5,5 @@ data class PropertyOnPropertyListFragmentViewModel(
     val name: String,
     val city: String,
     val price: String,
-    val mainPictureUrl: String)
+    val mainPictureUrl: String,
+    val size: Int)

@@ -31,7 +31,6 @@ class PictureListFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
             adapter = PictureAdapter(ArrayList())
             recyclerView.adapter = adapter
-
             view
         } catch (e: Exception) {
             e.printStackTrace()

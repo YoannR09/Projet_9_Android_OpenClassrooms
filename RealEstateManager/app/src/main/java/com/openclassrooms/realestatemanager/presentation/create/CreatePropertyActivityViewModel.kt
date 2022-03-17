@@ -96,7 +96,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
     val price = MutableStateFlow(0)
     //endregion
 
-    val pictureList = MutableStateFlow(arrayOf<PictureEntity>())
+    val pictureList = MutableStateFlow(listOf<PictureEntity>())
 
     val generalInfoCheckForm = combineStateFlows(scope, address, description, type) { address, description, type ->
         when {

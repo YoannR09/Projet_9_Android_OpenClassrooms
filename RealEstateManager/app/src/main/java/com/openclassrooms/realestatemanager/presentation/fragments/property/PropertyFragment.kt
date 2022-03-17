@@ -52,7 +52,7 @@ class PropertyFragment : Fragment() {
 
         viewModel
             .property
-            .observe(viewLifecycleOwner) { propertySelected ->
+            .observe(this) { propertySelected ->
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
 

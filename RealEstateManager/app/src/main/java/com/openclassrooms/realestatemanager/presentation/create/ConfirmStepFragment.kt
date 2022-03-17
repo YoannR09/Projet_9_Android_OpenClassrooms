@@ -37,28 +37,28 @@ class ConfirmStepFragment : Fragment() {
     }
 
     private fun completeObsPurchase() {
-        (activity as CreatePropertyActivity).viewModel.pieces.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.pieces.observe(this) {
             confirmPieces.text = it.toString()
         }
-        (activity as CreatePropertyActivity).viewModel.price.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.price.observe(this) {
             confirmPrice.text = "$it $"
         }
-        (activity as CreatePropertyActivity).viewModel.size.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.size.observe(this) {
             confirmSize.text = "$it m²"
         }
-        (activity as CreatePropertyActivity).viewModel.interestPoint.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.interestPoint.observe(this) {
             confirmInterest.text = it.toString()
         }
     }
 
     private fun completeObsGeneral() {
-        (activity as CreatePropertyActivity).viewModel.address.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.address.observe(this) {
             confirmAddress.text = it
         }
-        (activity as CreatePropertyActivity).viewModel.type.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.type.observe(this) {
             confirmType.text = it
         }
-        (activity as CreatePropertyActivity).viewModel.description.observe(viewLifecycleOwner) {
+        (activity as CreatePropertyActivity).viewModel.description.observe(this) {
             confirmDescription.text = it
         }
     }

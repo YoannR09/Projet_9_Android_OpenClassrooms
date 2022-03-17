@@ -21,7 +21,16 @@ object ScreenStateNoData: ScreenStatePropertyFragment()
 class PropertyFragmentViewModel: ViewModel() {
 
     val screenState = MutableStateFlow<ScreenStatePropertyFragment>(ScreenStateNothing)
-    val property = MutableLiveData<PropertyOnPropertyFragmentViewModel>()
+    val property = MutableStateFlow(PropertyOnPropertyFragmentViewModel(
+        id = "null",
+        name = "null",
+        city = "null",
+        price = "null",
+        description = "null",
+        creator= "null",
+        createdDate = "null",
+        state = "null"
+    ))
 
     fun loadPropertyById(id: String) {
         screenState.value = ScreenStateLoading
