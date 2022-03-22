@@ -6,7 +6,6 @@ import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 fun PropertyEntity.asModel() =
         PropertyModel(
                 id,
-                name,
                 type,
                 price,
                 meter,

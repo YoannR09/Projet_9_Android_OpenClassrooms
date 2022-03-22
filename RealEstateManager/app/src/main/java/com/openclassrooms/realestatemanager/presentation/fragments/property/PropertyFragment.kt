@@ -26,7 +26,7 @@ import com.openclassrooms.realestatemanager.utils.observe
 
 class PropertyFragment : Fragment() {
 
-    private val viewModel by lazy {
+    val viewModel by lazy {
         ViewModelProvider(this)[PropertyFragmentViewModel::class.java]
     }
 
@@ -52,7 +52,7 @@ class PropertyFragment : Fragment() {
 
         viewModel
             .property
-            .observe(this) { propertySelected ->
+            .observe(viewLifecycleOwner) { propertySelected ->
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
 
@@ -65,7 +65,8 @@ class PropertyFragment : Fragment() {
                     latitude = address[0].latitude;
                     longitude = address[0].longitude;
                 }
-                val url = "https://maps.google.com/maps/api/staticmap?center="+ latitude + "," + longitude+ "&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
+                val url =
+                    "https://maps.google.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
                 val circularProgressDrawable
                         = CircularProgressDrawable(RealStateManagerApplication.contextApp)
                 circularProgressDrawable.strokeWidth = 5f

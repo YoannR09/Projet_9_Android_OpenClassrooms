@@ -7,13 +7,12 @@ import androidx.room.PrimaryKey
 data class PropertyEntity(
     @PrimaryKey
     val id: String = "",
-    val name: String = "",
     val type: String = "",
     val price: Int = 0,
     val meter: Int = 0,
     val pieces: Int = 0,
     val description: String = "",
-    val picturesList: ArrayList<PictureEntity> = arrayListOf(),
+    val picturesList: List<PictureEntity> = listOf(),
     val address: String = "",
     val interestPoints: ArrayList<String> = arrayListOf(),
     val state: String = "",

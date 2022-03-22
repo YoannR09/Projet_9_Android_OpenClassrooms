@@ -9,15 +9,31 @@
         android:orientation="vertical"
         android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Picture list"
+            android:layout_margin="24dp"
+            android:textSize="24sp"/>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:id="@+id/create_list_picture_fragment"
+            tools:context=".presentation.home.HomeActivity"
+            android:name="com.openclassrooms.realestatemanager.presentation.create.CreatePictureListFragment" />
+
     <TextView
         android:id="@+id/input_no_pictures"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="12dp"
         android:textSize="16sp"
         android:text="No pictures selected" />
 
     <View
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@color/colorPrimary"/>
@@ -25,20 +41,9 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:layout_margin="24dp"
         android:text="Add picture"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:padding="6dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="Address">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/input_address"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:padding="6dp"
             android:layout_width="match_parent"

@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.presentation.fragments.property
 
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +10,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
@@ -60,9 +63,18 @@ class PictureAdapter (data: List<PictureEntity>?
             circularProgressDrawable.start()
             val url = picture.url
             try {
-                Glide.with(RealStateManagerApplication.contextApp)
-                    .load(url)
-                    .placeholder(circularProgressDrawable).into(this.imageView)
+                val mImageRef = FirebaseStorage.getInstance().getReference(url)
+                val oneMegaByte = (1024 * 1024).toLong()
+                mImageRef.getBytes(oneMegaByte)
+                    .addOnSuccessListener {
+                        val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
+                        val dm = DisplayMetrics()
+                        imageView.minimumHeight = dm.heightPixels
+                        imageView.minimumWidth = dm.widthPixels
+                        imageView.setImageBitmap(bm)
+                    }.addOnFailureListener {
+                        // Handle any errors
+                    }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -70,7 +82,7 @@ class PictureAdapter (data: List<PictureEntity>?
 
         init {
             itemView.setOnClickListener(this)
-            this.imageView = itemView.findViewById(R.id.image_main_property)
+            this.imageView = itemView.findViewById(R.id.image_item_property)
         }
 
         override fun onClick(v: View?) {

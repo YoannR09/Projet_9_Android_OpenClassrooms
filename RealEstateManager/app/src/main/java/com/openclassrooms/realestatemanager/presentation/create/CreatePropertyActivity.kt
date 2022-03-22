@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
+import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.utils.observe
 
@@ -42,6 +44,13 @@ class CreatePropertyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+
+        if (intent.hasExtra("created")) {
+            val property = savedInstanceState?.getSerializable("created")
+            println("here po " + property)
+        }
 
         setContentView(R.layout.activity_create_property)
 

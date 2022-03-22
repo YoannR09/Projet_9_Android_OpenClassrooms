@@ -8,7 +8,7 @@ import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.
 fun PropertyModel.asPropertyListViewModel() =
     PropertyOnPropertyListFragmentViewModel(
         id = id,
-        name = name,
+        name = type,
         city = address,
         price = price.toString(),
         mainPictureUrl = propertyPicturesEmpty(picturesList),
@@ -18,17 +18,17 @@ fun PropertyModel.asPropertyListViewModel() =
 fun PropertyModel.asPropertyViewModel() =
     PropertyOnPropertyFragmentViewModel(
         id = id,
-        name = name,
         city = address,
         price = price.toString(),
         description = description,
         creator = agentId,
         createdDate = ", on $createDate",
-        state = state
+        state = state,
+        pictureList = picturesList
     )
 
-fun propertyPicturesEmpty(picturesList: ArrayList<PictureEntity>): String {
-    return if(picturesList.size == 0) {
+fun propertyPicturesEmpty(picturesList: List<PictureEntity>): String {
+    return if(picturesList.isEmpty()) {
         "none"
     } else {
         picturesList[0].url

@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.presentation.fragments.property
+package com.openclassrooms.realestatemanager.presentation.create
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivityViewModel
+import com.openclassrooms.realestatemanager.presentation.fragments.property.PictureAdapter
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragmentViewModel
 import com.openclassrooms.realestatemanager.utils.observe
 
-class PictureListFragment : Fragment() {
+class CreatePictureListFragment : Fragment() {
     private var adapter: PictureAdapter? = null
     private lateinit var recyclerView: RecyclerView
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +30,8 @@ class PictureListFragment : Fragment() {
             recyclerView = view.findViewById(R.id.rvPictureList)
             recyclerView.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
             adapter = PictureAdapter(arrayListOf())
-            (parentFragment as PropertyFragment).viewModel.property.observe(viewLifecycleOwner) {
-                adapter!!.updateList(it.pictureList)
+            (requireActivity() as CreatePropertyActivity).viewModel.pictureList.observe(this) {
+                adapter!!.updateList(it)
             }
             recyclerView.adapter = adapter
             view

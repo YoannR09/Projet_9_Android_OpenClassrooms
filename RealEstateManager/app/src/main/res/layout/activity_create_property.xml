@@ -20,6 +20,36 @@
             />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <Button
+        android:id="@+id/create_button_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PREVIOUS"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/create_button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="NEXT"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:id="@+id/create_button_confirm"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="CREATE"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    <Button
+        android:visibility="gone"
+        android:id="@+id/test_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="add test"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/top_bar_create"
         android:layout_width="match_parent"
@@ -62,34 +92,4 @@
             android:layout_height="match_parent">
         </FrameLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/create_button_previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PREVIOUS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button
-        android:id="@+id/create_button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="NEXT"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button
-        android:id="@+id/create_button_confirm"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="CREATE"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-<Button
-    android:visibility="gone"
-    android:id="@+id/test_add"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="add test"
-    app:layout_constraintBottom_toBottomOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

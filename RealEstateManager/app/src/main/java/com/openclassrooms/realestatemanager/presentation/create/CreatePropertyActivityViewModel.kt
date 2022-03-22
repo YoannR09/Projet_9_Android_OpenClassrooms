@@ -13,6 +13,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.annotation.NonNull
+
+import com.google.android.gms.tasks.OnFailureListener
+
+import android.util.DisplayMetrics
+
+import android.graphics.BitmapFactory
+
+import android.graphics.Bitmap
+
+import com.google.firebase.storage.FirebaseStorage
+
+import com.google.firebase.storage.StorageReference
+
+
+
 
 sealed class ScreenStateCreateProperty
 
@@ -119,7 +135,6 @@ class CreatePropertyActivityViewModel: ViewModel() {
     fun createProperty(startActivity: () -> Unit) {
         try {
             val newProperty = PropertyEntity(
-                name = "test",
                 type = type.value,
                 address = address.value,
                 description = description.value,
@@ -129,7 +144,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
                 state = PropertyState.AVAILABLE.name,
                 createDate = Date().time.toString(),
                 interestPoints = interestPoint.value,
-                picturesList = ArrayList(),
+                picturesList = pictureList.value,
                 soldDate = "",
                 agentId = FirebaseAuth.getInstance().currentUser!!.email!!
             )
@@ -140,5 +155,9 @@ class CreatePropertyActivityViewModel: ViewModel() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    fun getPictureFromFirestore() {
+
     }
 }

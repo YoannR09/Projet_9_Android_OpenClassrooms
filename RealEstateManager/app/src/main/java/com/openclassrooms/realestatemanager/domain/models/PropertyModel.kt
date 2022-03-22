@@ -5,13 +5,12 @@ import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 
 data class PropertyModel (
         val id: String,
-        val name: String,
         val type: String,
         val price: Int,
         val meter: Int,
         val pieces: Int,
         val description: String,
-        val picturesList: ArrayList<PictureEntity>,
+        val picturesList: List<PictureEntity>,
         val address: String,
         val interestPoints: ArrayList<String>,
         val state: String,

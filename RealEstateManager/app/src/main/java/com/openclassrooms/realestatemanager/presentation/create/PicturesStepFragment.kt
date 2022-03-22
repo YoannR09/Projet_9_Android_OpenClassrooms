@@ -9,19 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.utils.observe
 import kotlinx.coroutines.flow.update
 import pl.aprilapps.easyphotopicker.*
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class PicturesStepFragment : Fragment() {
@@ -30,6 +34,8 @@ class PicturesStepFragment : Fragment() {
     private val inputDescription get() = requireView().findViewById<TextInputEditText>(R.id.input_picture_description)
     private val buttonSelectPicture get() = requireView().findViewById<Button>(R.id.select_picture)
     private val buttonUpload get() = requireView().findViewById<Button>(R.id.upload_picture)
+    private val fragmentListPictures get() = requireView().findViewById<FragmentContainerView>(R.id.create_list_picture_fragment)
+    private val textNoPictures get() = requireView().findViewById<TextView>(R.id.input_no_pictures)
 
     private lateinit var easyImage: EasyImage
 
@@ -62,6 +68,16 @@ class PicturesStepFragment : Fragment() {
         buttonUpload.setOnClickListener {
             uploadPicture()
         }
+
+        (requireActivity() as CreatePropertyActivity).viewModel.pictureList.observe(this) {
+            if(it.isEmpty()) {
+                fragmentListPictures.visibility = View.GONE
+                textNoPictures.visibility = View.VISIBLE
+            } else {
+                fragmentListPictures.visibility = View.VISIBLE
+                textNoPictures.visibility = View.GONE
+            }
+        }
     }
 
     private fun pickPictures() {
@@ -83,7 +99,6 @@ class PicturesStepFragment : Fragment() {
             println("error here picture upload failed")
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
         }.addOnSuccessListener { taskSnapshot ->
-            println("success full added here")
             (requireActivity() as CreatePropertyActivity).viewModel.pictureList.update {
                 it.toMutableList().plus(PictureEntity(
                     newPictureId,

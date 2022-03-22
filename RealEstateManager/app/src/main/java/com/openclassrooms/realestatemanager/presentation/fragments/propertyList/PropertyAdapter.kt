@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -16,6 +17,12 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivityViewModel
 import com.openclassrooms.realestatemanager.utils.observe
+import androidx.core.content.ContextCompat.startActivity
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.core.content.ContextCompat
+import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
 
 
 class PropertyAdapter(
@@ -66,6 +73,7 @@ class PropertyAdapter(
         private var price: TextView
         private var imageView: ImageView
         private var background: LinearLayout
+        private var editButton: Button
         var id: String = "id"
 
         fun bind(property: PropertyOnPropertyListFragmentViewModel) {
@@ -94,6 +102,13 @@ class PropertyAdapter(
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+            editButton.setOnClickListener {
+                val intent = Intent(
+                    itemView.context,
+                    CreatePropertyActivity::class.java)
+                intent.putExtra("created", property)
+                itemView.context.startActivity(intent)
+            }
         }
 
         init {
@@ -103,6 +118,7 @@ class PropertyAdapter(
             this.city = itemView.findViewById(R.id.property_list_city)
             this.imageView = itemView.findViewById(R.id.image_main_property)
             this.price = itemView.findViewById(R.id.property_price)
+            this.editButton = itemView.findViewById(R.id.button_edit)
         }
 
         private fun selectedItem() {
