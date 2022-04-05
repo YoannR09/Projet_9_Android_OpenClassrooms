@@ -47,10 +47,10 @@ class CreatePropertyActivity : AppCompatActivity() {
 
         val intent = intent
 
-        if (intent.hasExtra("created")) {
-            val property = savedInstanceState?.getSerializable("created")
-            println("here po " + property)
-        }
+        val property = intent.getSerializableExtra("created") as? PropertyOnPropertyListFragmentViewModel
+        viewModel.isAlreadyExist = property != null
+        println("id here " + property?.id)
+        property?.id?.let(viewModel::injectPropertyData)
 
         setContentView(R.layout.activity_create_property)
 

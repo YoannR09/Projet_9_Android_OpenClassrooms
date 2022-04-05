@@ -7,6 +7,7 @@ import com.openclassrooms.realestatemanager.domain.usecases.property.GetProperty
 import com.openclassrooms.realestatemanager.utils.InterestPoint
 import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class ScreenStatePropertyListFragment
@@ -46,7 +47,13 @@ class PropertyListFragmentViewModel: ViewModel() {
         //properties.value.filter { type.contains(it)}
     }
 
-
+    fun selectIndex(index: Int) {
+        properties.update {
+            it.toMutableList().mapIndexed { i, it ->
+                it.copy(isSelected = i == index)
+            }
+        }
+    }
 
 
 }

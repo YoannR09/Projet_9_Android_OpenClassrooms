@@ -15,6 +15,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
@@ -29,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var drawer: DrawerLayout
     lateinit var largeScreenList: View
     lateinit var navigationView: NavigationView
+    lateinit var leaveButton: FloatingActionButton
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -62,6 +64,7 @@ class HomeActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.tool_bar)
         drawer = findViewById(R.id.drawer)
         navigationView = findViewById(R.id.navigation_view)
+        // leaveButton = na
         agent = navigationView.getHeaderView(0).findViewById(R.id.agent_title)
         agent.text = FirebaseAuth.getInstance().currentUser?.email
         var isLargeScreen: Boolean
@@ -71,6 +74,7 @@ class HomeActivity : AppCompatActivity() {
         }catch (e: NullPointerException) {
             isLargeScreen = false
         }
+
         viewModel.isLargeScreen = isLargeScreen
         setSupportActionBar(toolbar)
     }

@@ -1,33 +1,29 @@
 package com.openclassrooms.realestatemanager.presentation.create
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.view.View
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.usecases.property.CreatePropertyUseCase
+import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyByIdUseCase
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
+import com.openclassrooms.realestatemanager.presentation.fragments.property.ScreenStateSuccess
+import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
+import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyViewModel
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.collections.ArrayList
-import androidx.annotation.NonNull
-
-import com.google.android.gms.tasks.OnFailureListener
-
-import android.util.DisplayMetrics
-
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-
-import com.google.firebase.storage.FirebaseStorage
-
-import com.google.firebase.storage.StorageReference
-
-
 
 
 sealed class ScreenStateCreateProperty
@@ -40,6 +36,8 @@ object ScreenStateNoData: ScreenStateCreateProperty()
 
 
 class CreatePropertyActivityViewModel: ViewModel() {
+
+    var isAlreadyExist: Boolean = false
 
     val types get() = PropertyTypeUiModel.values()
 
@@ -135,6 +133,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
     fun createProperty(startActivity: () -> Unit) {
         try {
             val newProperty = PropertyEntity(
+                id = "", // TODO,
                 type = type.value,
                 address = address.value,
                 description = description.value,
@@ -150,6 +149,17 @@ class CreatePropertyActivityViewModel: ViewModel() {
             )
             scope.launch {
                 CreatePropertyUseCase().createProperty(newProperty)
+                createNotificationChannel()
+                val builder: NotificationCompat.Builder =
+                    NotificationCompat.Builder(RealStateManagerApplication.context, "channel_id")
+                        .setContentTitle("Property created !")
+                        .setSmallIcon(R.drawable.ic_baseline_map_24)
+                        .setContentText(" Your property as succesfully created.")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                val notificationManager = NotificationManagerCompat.from(
+                    RealStateManagerApplication.context
+                )
+                notificationManager.notify(44, builder.build())
                 startActivity()
             }
         } catch (e: Exception) {
@@ -157,7 +167,35 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    fun getPictureFromFirestore() {
+    private fun createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name: CharSequence = "channel"
+            val description = "channel"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel("channel_id", name, importance)
+            channel.description = description
+            val notificationManager = RealStateManagerApplication.context.getSystemService(
+                NotificationManager::class.java
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
 
+    fun injectPropertyData(propertyId: String) {
+        scope.launch {
+            GetPropertyByIdUseCase().get(propertyId)
+                .onSuccess {
+                    val propertyModel = it
+                    description.value = propertyModel.description
+                    address.value = propertyModel.address
+                    interestPoint.value = propertyModel.interestPoints
+                    size.value = propertyModel.meter
+                    pieces.value = propertyModel.pieces
+                    price.value = propertyModel.price
+                    type.value = propertyModel.type
+                }
+        }
     }
 }

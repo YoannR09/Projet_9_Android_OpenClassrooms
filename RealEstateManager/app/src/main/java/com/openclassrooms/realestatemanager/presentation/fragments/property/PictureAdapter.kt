@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
@@ -51,9 +51,10 @@ class PictureAdapter (data: List<PictureEntity>?
     class PictureViewHolder internal constructor(
         itemView: View
     )
-        : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        : RecyclerView.ViewHolder(itemView){
 
-        private var imageView: ImageView
+        private val imageView: ImageView get() = itemView.findViewById(R.id.image_item_property)
+        private val pieceTitle: TextView get() = itemView.findViewById(R.id.img_piece_detail)
 
         fun bind(picture: PictureEntity) {
             val circularProgressDrawable
@@ -62,6 +63,7 @@ class PictureAdapter (data: List<PictureEntity>?
             circularProgressDrawable.centerRadius = 30f
             circularProgressDrawable.start()
             val url = picture.url
+            pieceTitle.text = picture.name
             try {
                 val mImageRef = FirebaseStorage.getInstance().getReference(url)
                 val oneMegaByte = (1024 * 1024).toLong()
@@ -78,15 +80,6 @@ class PictureAdapter (data: List<PictureEntity>?
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }
-
-        init {
-            itemView.setOnClickListener(this)
-            this.imageView = itemView.findViewById(R.id.image_item_property)
-        }
-
-        override fun onClick(v: View?) {
-          // ZOOM
         }
     }
 

@@ -9,4 +9,6 @@ data class PropertyOnPropertyListFragmentViewModel(
     val city: String,
     val price: String,
     val mainPictureUrl: String,
-    val size: Int): Serializable
+    val size: Int,
+    val isSelected: Boolean,
+    val state: Boolean): Serializable

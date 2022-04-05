@@ -13,7 +13,6 @@ class PropertyViewModelMapperTest {
 
     private val before = PropertyModel(
         id="id",
-        name = "name",
         address= "ad",
         agentId="agent",
         createDate="created",
@@ -46,7 +45,6 @@ class PropertyViewModelMapperTest {
         assertEquals(mapped.city, "ad")
         assertEquals(mapped.creator, "agent")
         assertEquals(mapped.description, "desc")
-        assertEquals(mapped.name, "name")
         assertEquals(mapped.price, "44")
         assertEquals(mapped.state, "state")
         assertEquals(mapped.createdDate, ", on created")

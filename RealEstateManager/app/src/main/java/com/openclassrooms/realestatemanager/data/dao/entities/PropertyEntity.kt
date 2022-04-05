@@ -20,5 +20,4 @@ data class PropertyEntity(
     val soldDate: String= "",
     val agentId: String = ""
 ) {
-    constructor() : this("id")
 }

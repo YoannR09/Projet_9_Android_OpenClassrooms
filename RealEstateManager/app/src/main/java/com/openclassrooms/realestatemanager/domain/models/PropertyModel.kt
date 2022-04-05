@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.domain.models
 
-import com.google.firebase.auth.FirebaseUser
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 
 data class PropertyModel (

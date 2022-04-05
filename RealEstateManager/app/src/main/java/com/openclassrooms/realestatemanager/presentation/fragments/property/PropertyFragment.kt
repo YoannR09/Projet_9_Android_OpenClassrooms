@@ -31,6 +31,7 @@ class PropertyFragment : Fragment() {
     }
 
     private val description: TextView get() = requireView().findViewById(R.id.property_description)
+    private val pieceCounter: TextView get() = requireView().findViewById(R.id.property_rooms)
     private val creator: TextView get() = requireView().findViewById(R.id.property_creator)
     private val createdDate: TextView get() = requireView().findViewById(R.id.created_date)
     private val loadingView: View get() = requireView().findViewById(R.id.loading_spinner)
@@ -41,6 +42,8 @@ class PropertyFragment : Fragment() {
     private val price: TextView get() = requireView().findViewById(R.id.price_property)
     private val toggleButton: MaterialButtonToggleGroup get() = requireView().findViewById(R.id.toggle_button)
     private val map: ImageView get() = requireView().findViewById(R.id.image_map_property)
+    private val size: TextView get() = requireView().findViewById(R.id.property_size)
+    private val addressText: TextView get() = requireView().findViewById(R.id.property_address)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,6 +63,7 @@ class PropertyFragment : Fragment() {
                 var longitude = 2.294571
 
                 val geoCoder = Geocoder(context)
+                addressText.text = propertySelected.city
                 val address: List<Address> = geoCoder.getFromLocationName(propertySelected.city, 1)
                 if(address.isNotEmpty()) {
                     latitude = address[0].latitude;
@@ -91,9 +95,11 @@ class PropertyFragment : Fragment() {
                         price.text = propertySelected.price + " $"
                     }
                 }
+                pieceCounter.text = propertySelected.piecesCounter.toString()
                 description.text = propertySelected.description
                 creator.text = propertySelected.creator
                 createdDate.text = propertySelected.createdDate
+                size.text = propertySelected.size
                 state.text = propertySelected.state
                 price.text = propertySelected.price + " $"
                 if(propertySelected.state == PropertyState.AVAILABLE.name) {

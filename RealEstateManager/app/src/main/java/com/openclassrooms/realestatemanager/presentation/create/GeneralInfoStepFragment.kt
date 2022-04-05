@@ -14,6 +14,8 @@ import android.util.TypedValue
 
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
+import com.openclassrooms.realestatemanager.utils.observe
 
 
 class GeneralInfoStepFragment : Fragment() {
@@ -34,14 +36,30 @@ class GeneralInfoStepFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        (activity as CreatePropertyActivity).viewModel.address.observe(viewLifecycleOwner) {
+            if(it != inputAddress.text.toString()) {
+                inputAddress.setText(it)
+            }
+        }
         inputAddress.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.address.value = it.toString()
         }
 
+        (activity as CreatePropertyActivity).viewModel.description.observe(viewLifecycleOwner) {
+            if(it != inputDescription.text.toString()) {
+                inputDescription.setText(it)
+            }
+        }
         inputDescription.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.description.value = it.toString()
         }
 
+        (activity as CreatePropertyActivity).viewModel.type.observe(viewLifecycleOwner) {
+            typeSelected ->
+            if(typeSelected != "" && typeSelected != inputSelectType.text.toString()) {
+                inputSelectType.setText(typeSelected, false)
+            }
+        }
         inputSelectType.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.type.value = it.toString()
         }

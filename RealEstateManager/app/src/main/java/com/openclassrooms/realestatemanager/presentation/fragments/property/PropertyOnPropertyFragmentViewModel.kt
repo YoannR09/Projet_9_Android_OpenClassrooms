@@ -10,5 +10,7 @@ data class PropertyOnPropertyFragmentViewModel(
     val creator: String,
     val createdDate: String,
     val state: String,
-    val pictureList: List<PictureEntity>
+    val pictureList: List<PictureEntity>,
+    val piecesCounter: Int,
+    val size: String
 )

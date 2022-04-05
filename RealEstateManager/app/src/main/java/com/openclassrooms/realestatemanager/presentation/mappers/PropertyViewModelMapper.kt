@@ -4,6 +4,9 @@ import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyOnPropertyFragmentViewModel
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
+import com.openclassrooms.realestatemanager.utils.Utils.dateToFormat
+import java.time.LocalDate
+import java.util.*
 
 fun PropertyModel.asPropertyListViewModel() =
     PropertyOnPropertyListFragmentViewModel(
@@ -12,7 +15,9 @@ fun PropertyModel.asPropertyListViewModel() =
         city = address,
         price = price.toString(),
         mainPictureUrl = propertyPicturesEmpty(picturesList),
-        size = meter
+        size = meter,
+        isSelected = false,
+        state = state == "AVAILABLE"
     )
 
 fun PropertyModel.asPropertyViewModel() =
@@ -22,9 +27,11 @@ fun PropertyModel.asPropertyViewModel() =
         price = price.toString(),
         description = description,
         creator = agentId,
-        createdDate = ", on $createDate",
+        createdDate = ", on ${dateToFormat(Date(createDate.toLong()))}",
         state = state,
-        pictureList = picturesList
+        pictureList = picturesList,
+        piecesCounter = pieces,
+        size = "$meter m²"
     )
 
 fun propertyPicturesEmpty(picturesList: List<PictureEntity>): String {
