@@ -27,6 +27,7 @@ class GeneralInfoStepFragment : Fragment() {
     private val chipsInterest: ChipGroup get() = requireView().findViewById(R.id.chips_list_interest)
 
     private val chipsSelected: ArrayList<String> = ArrayList()
+    private val chipList: ArrayList<Chip> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,30 +36,24 @@ class GeneralInfoStepFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel = (activity as CreatePropertyActivity).viewModel
 
-        (activity as CreatePropertyActivity).viewModel.address.observe(viewLifecycleOwner) {
-            if(it != inputAddress.text.toString()) {
-                inputAddress.setText(it)
-            }
+        viewModel.address.observe(this) {
+            inputAddress.setText(it)
         }
         inputAddress.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.address.value = it.toString()
         }
 
-        (activity as CreatePropertyActivity).viewModel.description.observe(viewLifecycleOwner) {
-            if(it != inputDescription.text.toString()) {
-                inputDescription.setText(it)
-            }
+        viewModel.description.observe(this) {
+            inputDescription.setText(it)
         }
         inputDescription.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.description.value = it.toString()
         }
 
-        (activity as CreatePropertyActivity).viewModel.type.observe(viewLifecycleOwner) {
-            typeSelected ->
-            if(typeSelected != "" && typeSelected != inputSelectType.text.toString()) {
-                inputSelectType.setText(typeSelected, false)
-            }
+        viewModel.type.observe(this) {
+            inputSelectType.setText(it, false)
         }
         inputSelectType.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.type.value = it.toString()
@@ -74,12 +69,17 @@ class GeneralInfoStepFragment : Fragment() {
         for (category in interestList) {
             val mChip =
                 this.layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
+            chipList.add(mChip)
             mChip.text = category
             val paddingDp = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 10f,
                 resources.displayMetrics
             ).toInt()
-            mChip.isSelected = (activity as CreatePropertyActivity).viewModel.interestPoint.value.contains(mChip.text.toString())
+            val isSelected = (activity as CreatePropertyActivity).viewModel.property?.interestPoints?.contains(mChip.text.toString()) == true
+            mChip.isSelected = isSelected
+            if(isSelected) {
+                chipsSelected.add(mChip.text.toString())
+            }
             mChip.setPadding(paddingDp, 0, paddingDp, 0 )
             mChip.setOnCheckedChangeListener { compoundButton, b ->
                 if(b) {

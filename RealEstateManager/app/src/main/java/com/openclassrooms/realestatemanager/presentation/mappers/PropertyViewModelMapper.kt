@@ -1,14 +1,16 @@
 package com.openclassrooms.realestatemanager.presentation.mappers
 
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.domain.models.PictureModel
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyOnPropertyFragmentViewModel
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
 import com.openclassrooms.realestatemanager.utils.Utils.dateToFormat
-import java.time.LocalDate
 import java.util.*
 
-fun PropertyModel.asPropertyListViewModel() =
+fun PropertyModel.asPropertyListViewModel(
+    isSelected: Boolean = false
+) =
     PropertyOnPropertyListFragmentViewModel(
         id = id,
         name = type,
@@ -16,7 +18,7 @@ fun PropertyModel.asPropertyListViewModel() =
         price = price.toString(),
         mainPictureUrl = propertyPicturesEmpty(picturesList),
         size = meter,
-        isSelected = false,
+        isSelected = isSelected,
         state = state == "AVAILABLE"
     )
 
@@ -34,7 +36,7 @@ fun PropertyModel.asPropertyViewModel() =
         size = "$meter m²"
     )
 
-fun propertyPicturesEmpty(picturesList: List<PictureEntity>): String {
+fun propertyPicturesEmpty(picturesList: List<PictureModel>): String {
     return if(picturesList.isEmpty()) {
         "none"
     } else {

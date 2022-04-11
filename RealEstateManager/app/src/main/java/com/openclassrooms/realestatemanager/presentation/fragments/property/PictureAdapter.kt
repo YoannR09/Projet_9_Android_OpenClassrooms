@@ -13,14 +13,14 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
-import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.domain.models.PictureModel
 
-class PictureAdapter (data: List<PictureEntity>?
+class PictureAdapter (data: List<PictureModel>?
 ) : RecyclerView.Adapter<PictureAdapter.PictureViewHolder>() {
-    private var mData: List<PictureEntity>? = data
+    private var mData: List<PictureModel>? = data
     private var context: Context? = null
 
-    fun updateList(viewModelList: List<PictureEntity>?) {
+    fun updateList(viewModelList: List<PictureModel>?) {
         mData = listOf()
         mData = viewModelList!!
         notifyDataSetChanged()
@@ -56,7 +56,7 @@ class PictureAdapter (data: List<PictureEntity>?
         private val imageView: ImageView get() = itemView.findViewById(R.id.image_item_property)
         private val pieceTitle: TextView get() = itemView.findViewById(R.id.img_piece_detail)
 
-        fun bind(picture: PictureEntity) {
+        fun bind(picture: PictureModel) {
             val circularProgressDrawable
                     = CircularProgressDrawable(RealStateManagerApplication.contextApp)
             circularProgressDrawable.strokeWidth = 5f

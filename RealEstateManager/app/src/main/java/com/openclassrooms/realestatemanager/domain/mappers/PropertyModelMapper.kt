@@ -11,7 +11,7 @@ fun PropertyEntity.asModel() =
                 meter,
                 pieces,
                 description,
-                picturesList,
+                picturesList.map { it.asModel() },
                 address,
                 interestPoints,
                 state,

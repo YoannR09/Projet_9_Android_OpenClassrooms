@@ -11,15 +11,55 @@
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/top_bar_create">
 
+
+
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="Create a property"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            />
+            >
+        </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:layout_margin="16dp"
+        android:id="@+id/sell_bar"
+        app:layout_constraintTop_toBottomOf="@id/top_bar_create"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Property state"/>
+           <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/sell_property_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                app:singleSelection="true"
+                android:layout_marginStart="16dp">
+                <Button
+                    android:id="@+id/toggle_available"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="available"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    />
+                <Button
+                    android:id="@+id/toggle_sell"
+                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Sell"
+                    android:textSize="16sp" />
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+    </LinearLayout>
 
     <Button
         android:id="@+id/create_button_previous"
@@ -51,7 +91,7 @@
         android:text="add test"
         app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
-        app:layout_constraintTop_toBottomOf="@id/top_bar_create"
+        app:layout_constraintTop_toBottomOf="@id/sell_bar"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_marginBottom="5dp"

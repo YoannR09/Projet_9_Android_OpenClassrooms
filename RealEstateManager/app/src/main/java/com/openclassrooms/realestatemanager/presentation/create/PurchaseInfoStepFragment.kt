@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.observe
 
 class PurchaseInfoStepFragment : Fragment() {
 
@@ -23,6 +24,10 @@ class PurchaseInfoStepFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val viewModel = (activity as CreatePropertyActivity).viewModel
+        viewModel.pieces.observe(this) {
+            inputPieces.setText(it.toString())
+        }
         inputPieces.addTextChangedListener {
             val input: Int = if(it.toString() == "") {
                 0
@@ -31,6 +36,10 @@ class PurchaseInfoStepFragment : Fragment() {
             }
             (activity as CreatePropertyActivity).viewModel.pieces.value = input
         }
+
+        viewModel.price.observe(this) {
+            inputPrice.setText(it.toString())
+        }
         inputPrice.addTextChangedListener {
             val input: Int = if(it.toString() == "") {
                 0
@@ -38,6 +47,10 @@ class PurchaseInfoStepFragment : Fragment() {
                 it.toString().toInt()
             }
             (activity as CreatePropertyActivity).viewModel.price.value = input
+        }
+
+        viewModel.size.observe(this) {
+            inputSize.setText(it.toString())
         }
         inputSize.addTextChangedListener {
             val input: Int = if(it.toString() == "") {

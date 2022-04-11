@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.presentation.fragments.property
 
-import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.domain.models.PictureModel
 
 data class PropertyOnPropertyFragmentViewModel(
     val id: String,
@@ -10,7 +10,7 @@ data class PropertyOnPropertyFragmentViewModel(
     val creator: String,
     val createdDate: String,
     val state: String,
-    val pictureList: List<PictureEntity>,
+    val pictureList: List<PictureModel>,
     val piecesCounter: Int,
     val size: String
 )

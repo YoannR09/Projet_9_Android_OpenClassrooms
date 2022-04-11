@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.domain.models.PictureModel
 import com.openclassrooms.realestatemanager.utils.observe
 import kotlinx.coroutines.flow.update
 import pl.aprilapps.easyphotopicker.*
@@ -55,7 +56,7 @@ class PicturesStepFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
+        val viewModel = (activity as CreatePropertyActivity).viewModel
         buttonSelectPicture.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
@@ -100,12 +101,13 @@ class PicturesStepFragment : Fragment() {
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
         }.addOnSuccessListener { taskSnapshot ->
             (requireActivity() as CreatePropertyActivity).viewModel.pictureList.update {
-                it.toMutableList().plus(PictureEntity(
+                it.toMutableList().plus(PictureModel(
                     newPictureId,
                     newPictureId,
                     inputDescription.text.toString(),
                     inputPiece.text.toString()
-                ))
+                )
+                )
             }
             inputDescription.text?.clear()
             inputPiece.text?.clear()

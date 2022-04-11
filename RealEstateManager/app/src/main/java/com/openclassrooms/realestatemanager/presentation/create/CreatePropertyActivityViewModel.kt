@@ -7,23 +7,22 @@ import android.view.View
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
+import com.openclassrooms.realestatemanager.domain.models.PictureModel
+import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.domain.usecases.property.CreatePropertyUseCase
-import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyByIdUseCase
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
-import com.openclassrooms.realestatemanager.presentation.fragments.property.ScreenStateSuccess
-import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
-import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyViewModel
+import com.openclassrooms.realestatemanager.presentation.mappers.asEntity
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 sealed class ScreenStateCreateProperty
@@ -34,10 +33,17 @@ object ScreenStateLoading: ScreenStateCreateProperty()
 data class ScreenStateSuccess(val success: String): ScreenStateCreateProperty()
 object ScreenStateNoData: ScreenStateCreateProperty()
 
+class CreatePropertyActivityViewModelFactory(
+    private val property: PropertyModel?
+) : ViewModelProvider.NewInstanceFactory() {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T = CreatePropertyActivityViewModel(property) as T
+}
 
-class CreatePropertyActivityViewModel: ViewModel() {
+class CreatePropertyActivityViewModel(
+    val property: PropertyModel?
+): ViewModel() {
 
-    var isAlreadyExist: Boolean = false
+    lateinit var id: String;
 
     val types get() = PropertyTypeUiModel.values()
 
@@ -98,19 +104,19 @@ class CreatePropertyActivityViewModel: ViewModel() {
     }
 
     //region Information
-    val type = MutableStateFlow("")
-    val description = MutableStateFlow("")
-    val address = MutableStateFlow("")
-    val interestPoint = MutableStateFlow(ArrayList<String>())
+    val type = MutableStateFlow(property?.type ?: "")
+    val description = MutableStateFlow(property?.description ?: "")
+    val address = MutableStateFlow(property?.address ?: "")
+    val interestPoint = MutableStateFlow(property?.interestPoints ?: listOf())
     //endregion
 
     //region Purchase
-    val size = MutableStateFlow(0)
-    val pieces = MutableStateFlow(0)
-    val price = MutableStateFlow(0)
+    val size = MutableStateFlow(property?.meter ?: 0)
+    val pieces = MutableStateFlow(property?.pieces ?: 0)
+    val price = MutableStateFlow(property?.price ?: 0)
     //endregion
 
-    val pictureList = MutableStateFlow(listOf<PictureEntity>())
+    val pictureList = MutableStateFlow(property?.picturesList ?: listOf<PictureModel>())
 
     val generalInfoCheckForm = combineStateFlows(scope, address, description, type) { address, description, type ->
         when {
@@ -133,7 +139,7 @@ class CreatePropertyActivityViewModel: ViewModel() {
     fun createProperty(startActivity: () -> Unit) {
         try {
             val newProperty = PropertyEntity(
-                id = "", // TODO,
+                id = Date().time.toString() + "-" + FirebaseAuth.getInstance().currentUser!!.email!!,
                 type = type.value,
                 address = address.value,
                 description = description.value,
@@ -142,8 +148,8 @@ class CreatePropertyActivityViewModel: ViewModel() {
                 pieces = pieces.value,
                 state = PropertyState.AVAILABLE.name,
                 createDate = Date().time.toString(),
-                interestPoints = interestPoint.value,
-                picturesList = pictureList.value,
+                interestPoints = arrayListOf(*interestPoint.value.toTypedArray()),
+                picturesList = pictureList.value.map { it.asEntity() },
                 soldDate = "",
                 agentId = FirebaseAuth.getInstance().currentUser!!.email!!
             )
@@ -183,11 +189,12 @@ class CreatePropertyActivityViewModel: ViewModel() {
         }
     }
 
-    fun injectPropertyData(propertyId: String) {
+    /*fun injectPropertyData(propertyId: String) {
         scope.launch {
             GetPropertyByIdUseCase().get(propertyId)
                 .onSuccess {
                     val propertyModel = it
+                    id = propertyModel.id
                     description.value = propertyModel.description
                     address.value = propertyModel.address
                     interestPoint.value = propertyModel.interestPoints
@@ -195,7 +202,9 @@ class CreatePropertyActivityViewModel: ViewModel() {
                     pieces.value = propertyModel.pieces
                     price.value = propertyModel.price
                     type.value = propertyModel.type
+                    pictureList.value = propertyModel.picturesList
                 }
+            isInjected.value = true
         }
-    }
+    }*/
 }

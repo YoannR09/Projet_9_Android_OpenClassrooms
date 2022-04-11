@@ -15,6 +15,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
 import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
+import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
 import com.openclassrooms.realestatemanager.utils.observe
 import java.util.*
 
@@ -23,12 +24,17 @@ class PropertyListFragment : Fragment() {
     private var adapter: PropertyAdapter? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyList: TextView
-    private val viewModel by lazy {
-        ViewModelProvider(this)[PropertyListFragmentViewModel::class.java]
+
+    private val homeActivitySharedViewModel by lazy {
+        ViewModelProvider(this)[HomeActivitySharedViewModel::class.java]
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val viewModel by lazy {
+        ViewModelProvider(this,
+            PropertyListFragmentViewModelFactory(
+                homeActivitySharedViewModel = homeActivitySharedViewModel
+            )
+        )[PropertyListFragmentViewModel::class.java]
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -39,11 +45,11 @@ class PropertyListFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(activity)
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
                 override fun onEditButtonClick(index: Int) {
-                    val intent = Intent(
-                        it,
-                        CreatePropertyActivity::class.java)
-                    intent.putExtra("created", viewModel.properties.value[index])
-                    it.startActivity(intent)
+                    CreatePropertyActivity
+                        .start(
+                            context = activity!!,
+                            property = homeActivitySharedViewModel.properties.value[index]
+                        )
                 }
 
                 override fun onItemClick(index: Int) {
@@ -63,7 +69,6 @@ class PropertyListFragment : Fragment() {
                    if(lastIndex >= 0) {
                        adapter?.notifyItemChanged(lastIndex)
                    }
-
                 }
             }) }
             recyclerView.adapter = adapter

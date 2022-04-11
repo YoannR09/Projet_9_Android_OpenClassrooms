@@ -1,24 +1,36 @@
 package com.openclassrooms.realestatemanager.presentation.create
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyOnPropertyListFragmentViewModel
+import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.observe
 
 class CreatePropertyActivity : AppCompatActivity() {
+
+    companion object {
+        fun start(context: Context, property: PropertyModel? = null) {
+            val intent = Intent(context, CreatePropertyActivity::class.java)
+            intent.putExtra("property", property)
+            context.startActivity(intent)
+        }
+    }
 
     private val previous: Button get() = findViewById(R.id.create_button_previous)
     private val next: Button get() = findViewById(R.id.create_button_next)
@@ -29,7 +41,8 @@ class CreatePropertyActivity : AppCompatActivity() {
     private val stepper: LinearProgressIndicator get() = findViewById(R.id.stepper)
 
     private val appBar: MaterialToolbar get() = findViewById(R.id.top_bar)
-
+    private val sellToggle: MaterialButtonToggleGroup get() = findViewById(R.id.sell_property_button)
+    private val sellBar: LinearLayout get() = findViewById(R.id.sell_bar)
     private val generalInfoStepper by lazy(::GeneralInfoStepFragment)
     private val purchaseInfoStepFragment by lazy(::PurchaseInfoStepFragment)
     private val picturesStepFragment by lazy(::PicturesStepFragment)
@@ -39,18 +52,13 @@ class CreatePropertyActivity : AppCompatActivity() {
     var previousStep: Int = 0
 
     val viewModel by lazy {
-        ViewModelProvider(this)[CreatePropertyActivityViewModel::class.java]
+        ViewModelProvider(this, CreatePropertyActivityViewModelFactory(
+            property = intent.getSerializableExtra("property") as? PropertyModel
+        ))[CreatePropertyActivityViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val intent = intent
-
-        val property = intent.getSerializableExtra("created") as? PropertyOnPropertyListFragmentViewModel
-        viewModel.isAlreadyExist = property != null
-        println("id here " + property?.id)
-        property?.id?.let(viewModel::injectPropertyData)
 
         setContentView(R.layout.activity_create_property)
 
@@ -58,6 +66,31 @@ class CreatePropertyActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         appBar.setTitleTextColor(Color.WHITE)
+
+        val availableId = sellToggle[0].id
+        val sellId = sellToggle[1].id
+
+        if(viewModel.property != null) {
+            if(viewModel.property!!.state == "AVAILABLE") {
+                sellToggle.check(availableId)
+            } else {
+                sellToggle.check(sellId)
+            }
+            sellBar.visibility = View.VISIBLE
+        } else {
+            sellBar.visibility = View.GONE
+        }
+
+        sellToggle.addOnButtonCheckedListener{ group, checkedId, _ ->
+            if (group.checkedButtonId == -1) {
+                group.check(checkedId)
+            }
+            if(checkedId == availableId) {
+                // TODO available
+            } else {
+                // TODO sell
+            }
+        }
 
         implScreenState()
 

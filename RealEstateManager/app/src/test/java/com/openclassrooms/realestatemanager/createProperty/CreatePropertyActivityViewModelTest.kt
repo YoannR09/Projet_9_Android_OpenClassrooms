@@ -28,7 +28,7 @@ class CreatePropertyActivityViewModelTest {
     @Before
     fun before() {
         Dispatchers.setMain(mainThreadSurrogate)
-        model = CreatePropertyActivityViewModel()
+        model = CreatePropertyActivityViewModel(null)
         _viewModelScope = TestScope(mainThreadSurrogate)
     }
 

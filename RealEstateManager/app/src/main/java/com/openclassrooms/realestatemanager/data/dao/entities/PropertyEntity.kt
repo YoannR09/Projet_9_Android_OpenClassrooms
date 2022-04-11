@@ -19,5 +19,5 @@ data class PropertyEntity(
     val createDate: String= "",
     val soldDate: String= "",
     val agentId: String = ""
-) {
-}
+)
+
