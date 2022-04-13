@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide
 import com.google.common.io.Resources.getResource
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.PropertyState
 
 interface PropertyAdapterListener {
     fun onEditButtonClick(index: Int)
@@ -105,7 +106,12 @@ class PropertyAdapter(
                     this.imageView.setImageBitmap(
                         ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
                 }
-            state.setColorFilter(Color.GREEN)
+
+            if(property.state) {
+                state.setColorFilter(Color.GREEN)
+            } else {
+                state.setColorFilter(Color.RED)
+            }
             editButton.setOnClickListener {
                 listener.onEditButtonClick(adapterPosition)
             }

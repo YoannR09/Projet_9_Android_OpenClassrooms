@@ -64,7 +64,11 @@ class PropertyFragment : Fragment() {
 
                 val geoCoder = Geocoder(context)
                 addressText.text = propertySelected.city
-                val address: List<Address> = geoCoder.getFromLocationName(propertySelected.city, 1)
+                var address: List<Address> = try {
+                    geoCoder.getFromLocationName(propertySelected.city, 1)
+                }catch (e: Exception) {
+                    listOf()
+                }
                 if(address.isNotEmpty()) {
                     latitude = address[0].latitude;
                     longitude = address[0].longitude;

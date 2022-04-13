@@ -8,6 +8,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
@@ -16,6 +17,7 @@ import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.models.PictureModel
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.domain.usecases.property.CreatePropertyUseCase
+import com.openclassrooms.realestatemanager.domain.usecases.property.UpdateStatePropertyUseCase
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
 import com.openclassrooms.realestatemanager.presentation.mappers.asEntity
@@ -186,6 +188,16 @@ class CreatePropertyActivityViewModel(
                 NotificationManager::class.java
             )
             notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    fun updateState(state: String) {
+        scope.launch {
+            var date = ""
+            if(state === PropertyState.SELL.name) {
+                date = Date().time.toString()
+            }
+            UpdateStatePropertyUseCase().updateStateProperty(state, date, property!!.id)
         }
     }
 

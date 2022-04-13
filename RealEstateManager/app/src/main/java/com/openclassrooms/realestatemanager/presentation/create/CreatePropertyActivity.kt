@@ -18,7 +18,9 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
+import com.openclassrooms.realestatemanager.domain.usecases.property.UpdateStatePropertyUseCase
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
+import com.openclassrooms.realestatemanager.utils.PropertyState
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.observe
 
@@ -86,9 +88,9 @@ class CreatePropertyActivity : AppCompatActivity() {
                 group.check(checkedId)
             }
             if(checkedId == availableId) {
-                // TODO available
+                viewModel.updateState(PropertyState.AVAILABLE.name)
             } else {
-                // TODO sell
+                viewModel.updateState(PropertyState.SELL.name)
             }
         }
 

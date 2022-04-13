@@ -68,6 +68,45 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
+    override suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
+        return suspendCoroutine {
+                coroutine ->
+            db.collection("property").document(propertyId).update(
+                "state", state,
+                "soldDate", date)
+                .addOnSuccessListener {
+                    coroutine.resume(Unit)
+                }
+                .addOnFailureListener {
+                        err ->
+                    err.printStackTrace()
+                    throw Resources.NotFoundException()
+                }
+        }
+    }
+    //override
+    suspend fun updateProperty(propertyEntity: PropertyEntity) {
+        return suspendCoroutine {
+                coroutine ->
+            db.collection("property").document(propertyEntity.id)
+                .update("description", propertyEntity.description,
+                    "interestPoint", propertyEntity.interestPoints,
+                    "meter", propertyEntity.meter,
+                    "picturesList", propertyEntity.picturesList,
+                    "pieces", propertyEntity.pieces,
+                    "price", propertyEntity.price,
+                    "type", propertyEntity.type)
+                .addOnSuccessListener {
+                    coroutine.resume(Unit)
+                }
+                .addOnFailureListener {
+                        err ->
+                    err.printStackTrace()
+                    throw Resources.NotFoundException()
+                }
+        }
+    }
+
     /**
      * Shouldn't be impl on this project
      */

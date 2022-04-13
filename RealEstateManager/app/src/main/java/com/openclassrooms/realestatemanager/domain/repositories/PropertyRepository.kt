@@ -31,4 +31,20 @@ class PropertyRepository(private val dao: PropertiesDao) {
     suspend fun createProperty(propertyEntity: PropertyEntity) {
         return dao.createProperty(propertyEntity)
     }
+
+    suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
+        return try {
+            dao.updateStateProperty(state, date, propertyId)
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
+
+    suspend fun updateProperty(propertyEntity: PropertyEntity) {
+        return try {
+            //dao.updateProperty(propertyEntity)
+        } catch (e: Exception){
+            e.printStackTrace()
+        }
+    }
 }
