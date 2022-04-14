@@ -5,8 +5,8 @@ import com.openclassrooms.realestatemanager.domain.models.PictureModel
 
 fun PictureEntity.asModel() =
     PictureModel(
-        id,
-        url,
-        description,
-        name
+        id = id,
+        url = url,
+        description = description,
+        name = name
     )

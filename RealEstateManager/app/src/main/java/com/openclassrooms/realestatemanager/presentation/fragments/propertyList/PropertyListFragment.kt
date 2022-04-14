@@ -5,9 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +26,7 @@ class PropertyListFragment : Fragment() {
     private var adapter: PropertyAdapter? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyList: TextView
+    private lateinit var filterButton: Button
 
     private val homeActivitySharedViewModel by lazy {
         ViewModelProvider(this)[HomeActivitySharedViewModel::class.java]
@@ -43,6 +46,10 @@ class PropertyListFragment : Fragment() {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
             recyclerView = view.findViewById(R.id.rvPropertyList)
             recyclerView.layoutManager = LinearLayoutManager(activity)
+            filterButton = view.findViewById(R.id.filter_button)
+            filterButton.setOnClickListener {
+                showDialog()
+            }
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
                 override fun onEditButtonClick(index: Int) {
                     CreatePropertyActivity
@@ -89,6 +96,19 @@ class PropertyListFragment : Fragment() {
             e.printStackTrace()
             inflater.inflate(R.layout.fragment_property_list, container, false)
         }
+    }
+
+    private fun showDialog() {
+        val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
+        val prev = requireFragmentManager().findFragmentByTag("dialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+
+        // Create and show the dialog.
+        val newFragment: FilterPropertyDialogFragment = FilterPropertyDialogFragment.newInstance(homeActivitySharedViewModel)
+        newFragment.show(ft, "dialog")
     }
 
     private fun implScreenState() {

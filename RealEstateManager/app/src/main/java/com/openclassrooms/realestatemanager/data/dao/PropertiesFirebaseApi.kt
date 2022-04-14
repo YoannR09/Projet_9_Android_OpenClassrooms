@@ -8,11 +8,11 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 
-class PropertiesDaoImplFirebase : PropertiesDao {
+class PropertiesFirebaseApi {
 
     private val db = Firebase.firestore
 
-    override suspend fun list(): List<PropertyEntity> {
+    suspend fun list(): List<PropertyEntity> {
         return suspendCoroutine {
             db.collection("property")
                 .get()
@@ -32,7 +32,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
-    override suspend fun createProperty(entity: PropertyEntity?) {
+    suspend fun createProperty(entity: PropertyEntity?) {
         return suspendCoroutine {
             db.collection("property")
                 .add(entity!!)
@@ -49,7 +49,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
-    override suspend fun getPropertyById(id: String): PropertyEntity {
+    suspend fun getPropertyById(id: String): PropertyEntity {
         return suspendCoroutine { coroutine ->
             db.collection("property")
                 .whereEqualTo("id", id)
@@ -68,7 +68,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
         }
     }
 
-    override suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
+    suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
         return suspendCoroutine {
                 coroutine ->
             db.collection("property").document(propertyId).update(
@@ -84,7 +84,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
                 }
         }
     }
-    //override
+
     suspend fun updateProperty(propertyEntity: PropertyEntity) {
         return suspendCoroutine {
                 coroutine ->
@@ -110,7 +110,7 @@ class PropertiesDaoImplFirebase : PropertiesDao {
     /**
      * Shouldn't be impl on this project
      */
-    override fun deleteProperty(id: String) {
+    fun deleteProperty(id: String) {
         TODO("Not yet implemented")
     }
 

@@ -200,23 +200,4 @@ class CreatePropertyActivityViewModel(
             UpdateStatePropertyUseCase().updateStateProperty(state, date, property!!.id)
         }
     }
-
-    /*fun injectPropertyData(propertyId: String) {
-        scope.launch {
-            GetPropertyByIdUseCase().get(propertyId)
-                .onSuccess {
-                    val propertyModel = it
-                    id = propertyModel.id
-                    description.value = propertyModel.description
-                    address.value = propertyModel.address
-                    interestPoint.value = propertyModel.interestPoints
-                    size.value = propertyModel.meter
-                    pieces.value = propertyModel.pieces
-                    price.value = propertyModel.price
-                    type.value = propertyModel.type
-                    pictureList.value = propertyModel.picturesList
-                }
-            isInjected.value = true
-        }
-    }*/
 }

@@ -5,6 +5,6 @@ import com.openclassrooms.realestatemanager.domain.repositories.Repository
 
 class UpdatePropertyUseCase {
     suspend fun updateProperty(property: PropertyEntity) {
-        Repository.getPropertyRepository()?.updateProperty(property)
+        Repository.propertyRepository.updateProperty(property)
     }
 }

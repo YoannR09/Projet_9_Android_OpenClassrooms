@@ -6,6 +6,6 @@ import com.openclassrooms.realestatemanager.domain.repositories.Repository
 class CreatePropertyUseCase {
 
     suspend fun createProperty(entity: PropertyEntity) {
-        Repository.getPropertyRepository()?.createProperty(entity)
+        Repository.propertyRepository.createProperty(entity)
     }
 }

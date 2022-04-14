@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,7 +31,7 @@ class HomeActivity : AppCompatActivity() {
     lateinit var drawer: DrawerLayout
     lateinit var largeScreenList: View
     lateinit var navigationView: NavigationView
-    lateinit var leaveButton: FloatingActionButton
+    lateinit var leaveButton: Button
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -64,8 +65,11 @@ class HomeActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.tool_bar)
         drawer = findViewById(R.id.drawer)
         navigationView = findViewById(R.id.navigation_view)
-        // leaveButton = na
         agent = navigationView.getHeaderView(0).findViewById(R.id.agent_title)
+        leaveButton = navigationView.getHeaderView(0).findViewById(R.id.leave_button)
+        leaveButton.setOnClickListener {
+            logoutToRefreshMainActivity()
+        }
         agent.text = FirebaseAuth.getInstance().currentUser?.email
         var isLargeScreen: Boolean
         try {

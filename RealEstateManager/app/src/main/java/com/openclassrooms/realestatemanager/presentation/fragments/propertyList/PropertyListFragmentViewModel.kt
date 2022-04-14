@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
 import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyListViewModel
+import com.openclassrooms.realestatemanager.utils.InterestPoint
 import com.openclassrooms.realestatemanager.utils.combineStateFlows
 import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,13 +47,14 @@ class PropertyListFragmentViewModel(
                 .onSuccess {
                     screenState.value = ScreenStateSuccess
                     homeActivitySharedViewModel.properties.value = it
+                    homeActivitySharedViewModel.noFilteredProperties.value = it
                 }.onFailure {
                     screenState.value = ScreenStateError(it.message ?: "We have an error")
                 }
         }
     }
 
-    /*fun filterBySize(min: Int, max: Int) {
+    fun filterBySize(min: Int, max: Int) {
         properties.value.filter { (it.size in min..max) }
     }
 
@@ -62,7 +64,7 @@ class PropertyListFragmentViewModel(
 
     fun filterByInterestPoint(type: List<InterestPoint>) {
         //properties.value.filter { type.contains(it)}
-    }*/
+    }
 
     fun selectIndex(index: Int) {
         selectedPropertyIndex.value = index

@@ -1,21 +1,24 @@
 package com.openclassrooms.realestatemanager.domain.repositories
 
 import com.openclassrooms.realestatemanager.data.dao.PropertiesDao
+import com.openclassrooms.realestatemanager.data.dao.PropertiesFirebaseApi
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.mappers.asModel
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 
-class PropertyRepository(private val dao: PropertiesDao) {
+class PropertyRepository(
+    private val api: PropertiesFirebaseApi,
+    private val dao: PropertiesDao) {
 
     suspend fun getList(): Result<List<PropertyModel>> {
         return try {
-            val listModel = ArrayList<PropertyModel>()
-            for(entity in this.dao.list()) {
-                listModel.add(entity.asModel())
+            Result.success(api.list().map { it.asModel() })
+        } catch (e: Exception){
+            try {
+                Result.success(dao.list().map { it.asModel() })
+            }catch (e: Exception) {
+                Result.failure(e)
             }
-            Result.success(listModel)
-        }catch (e: Exception){
-            Result.failure(e)
         }
     }
 
@@ -29,7 +32,11 @@ class PropertyRepository(private val dao: PropertiesDao) {
     }
 
     suspend fun createProperty(propertyEntity: PropertyEntity) {
-        return dao.createProperty(propertyEntity)
+        try {
+
+        } catch (e: Exception) {
+
+        }
     }
 
     suspend fun updateStateProperty(state: String, date: String, propertyId: String) {

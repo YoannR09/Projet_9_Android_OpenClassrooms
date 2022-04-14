@@ -5,6 +5,6 @@ import com.openclassrooms.realestatemanager.domain.repositories.Repository
 
 class GetPropertyByIdUseCase {
     suspend fun get(id: String): Result<PropertyModel> {
-        return Repository.getPropertyRepository()!!.getPropertyById(id)
+        return Repository.propertyRepository.getPropertyById(id)
     }
 }
