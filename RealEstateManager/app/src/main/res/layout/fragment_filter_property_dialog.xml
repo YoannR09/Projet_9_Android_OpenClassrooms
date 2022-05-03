@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="8dp"
         android:orientation="vertical">
 
     <TextView
@@ -17,6 +18,52 @@
         android:layout_height="wrap_content"
         android:textSize="25sp"
         android:text="Filter"/>
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menu_type"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Type">
+
+                <AutoCompleteTextView
+                    android:id="@+id/input_type_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/menu_pictures_length"
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Pictures length">
+
+                <AutoCompleteTextView
+                    android:id="@+id/input_pictures_length_filter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,6 +109,58 @@
                 />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+            <Button
+                android:id="@+id/select_create_date"
+                android:layout_width="wrap_content"
+                android:textColor="@android:color/white"
+                android:layout_height="match_parent"
+                android:text="Created date"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|end"
+                android:text="..."/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/select_sold_date"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@android:color/white"
+                android:text="SOLD date"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center|end"
+                android:text="..."/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Interest Points"
+            android:layout_marginTop="36dp"
+            android:textSize="20sp"/>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chips_list_interest_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            app:chipSpacing="8dp"
+            app:singleSelection="false">
+        </com.google.android.material.chip.ChipGroup>
         <Button
             android:id="@+id/apply_filter"
             android:layout_width="match_parent"

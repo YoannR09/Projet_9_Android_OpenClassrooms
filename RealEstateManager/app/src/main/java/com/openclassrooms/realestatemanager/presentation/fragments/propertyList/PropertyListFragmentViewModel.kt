@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.domain.usecases.property.GetPropertyListUseCase
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
 import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyListViewModel
 import com.openclassrooms.realestatemanager.utils.InterestPoint
@@ -46,8 +47,7 @@ class PropertyListFragmentViewModel(
             GetPropertyListUseCase().getList()
                 .onSuccess {
                     screenState.value = ScreenStateSuccess
-                    homeActivitySharedViewModel.properties.value = it
-                    homeActivitySharedViewModel.noFilteredProperties.value = it
+                    homeActivitySharedViewModel.setProperties(it)
                 }.onFailure {
                     screenState.value = ScreenStateError(it.message ?: "We have an error")
                 }

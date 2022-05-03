@@ -24,8 +24,13 @@ class PropertyRepository(
 
     suspend fun getPropertyById(id: String): Result<PropertyModel> {
         return try {
-            Result.success(dao.getPropertyById(id).asModel())
+            Result.success(api.getPropertyById(id).asModel())
         } catch (e: Exception){
+            try {
+                Result.success(dao.getPropertyById(id).asModel())
+            }catch (e: Exception) {
+
+            }
             e.printStackTrace()
             Result.failure(e)
         }

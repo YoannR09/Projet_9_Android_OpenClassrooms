@@ -27,7 +27,6 @@ class GeneralInfoStepFragment : Fragment() {
     private val chipsInterest: ChipGroup get() = requireView().findViewById(R.id.chips_list_interest)
 
     private val chipsSelected: ArrayList<String> = ArrayList()
-    private val chipList: ArrayList<Chip> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +68,6 @@ class GeneralInfoStepFragment : Fragment() {
         for (category in interestList) {
             val mChip =
                 this.layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
-            chipList.add(mChip)
             mChip.text = category
             val paddingDp = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 10f,

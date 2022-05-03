@@ -29,7 +29,7 @@ class PropertyListFragment : Fragment() {
     private lateinit var filterButton: Button
 
     private val homeActivitySharedViewModel by lazy {
-        ViewModelProvider(this)[HomeActivitySharedViewModel::class.java]
+        ViewModelProvider(requireActivity())[HomeActivitySharedViewModel::class.java]
     }
 
     private val viewModel by lazy {
@@ -107,7 +107,7 @@ class PropertyListFragment : Fragment() {
         ft.addToBackStack(null)
 
         // Create and show the dialog.
-        val newFragment: FilterPropertyDialogFragment = FilterPropertyDialogFragment.newInstance(homeActivitySharedViewModel)
+        val newFragment: FilterPropertyDialogFragment = FilterPropertyDialogFragment.newInstance()
         newFragment.show(ft, "dialog")
     }
 

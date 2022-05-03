@@ -25,7 +25,12 @@ import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyAc
 
 class HomeActivity : AppCompatActivity() {
     private val DRAWER_ICON_ID = 16908332
-    lateinit var viewModel: HomeActivityViewModel
+    val viewModel: HomeActivityViewModel by lazy {
+        ViewModelProvider(this)[HomeActivityViewModel::class.java]
+    }
+    val sharedViewModel by lazy {
+
+    }
     lateinit var toolbar: MaterialToolbar
     lateinit var agent: TextView
     lateinit var drawer: DrawerLayout
@@ -38,7 +43,6 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
 
         if (FirebaseAuth.getInstance().currentUser == null) {
             val providers: List<AuthUI.IdpConfig> = listOf(
@@ -60,7 +64,6 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        viewModel = ViewModelProvider(this)[HomeActivityViewModel::class.java]
         setContentView(R.layout.activity_main)
         toolbar = findViewById(R.id.tool_bar)
         drawer = findViewById(R.id.drawer)
