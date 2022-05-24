@@ -65,6 +65,8 @@ class GeneralInfoStepFragment : Fragment() {
     }
 
     private fun setInterestChips(interestList: List<String?>) {
+        chipsSelected.clear()
+        (activity as CreatePropertyActivity).viewModel.interestPoint.value.let { chipsSelected.addAll(it) }
         for (category in interestList) {
             val mChip =
                 this.layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
@@ -73,11 +75,7 @@ class GeneralInfoStepFragment : Fragment() {
                 TypedValue.COMPLEX_UNIT_DIP, 10f,
                 resources.displayMetrics
             ).toInt()
-            val isSelected = (activity as CreatePropertyActivity).viewModel.property?.interestPoints?.contains(mChip.text.toString()) == true
-            mChip.isSelected = isSelected
-            if(isSelected) {
-                chipsSelected.add(mChip.text.toString())
-            }
+            mChip.isSelected = chipsSelected.contains(mChip.text)
             mChip.setPadding(paddingDp, 0, paddingDp, 0 )
             mChip.setOnCheckedChangeListener { compoundButton, b ->
                 if(b) {

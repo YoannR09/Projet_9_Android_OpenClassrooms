@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.presentation.fragments.propertyList
 
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,6 @@ import android.widget.AutoCompleteTextView
 import android.widget.Button
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
@@ -20,13 +17,8 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
-import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyOnPropertyFragmentViewModel
-import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 
 enum class PropertyType (
     val title: String
@@ -92,7 +84,7 @@ class FilterPropertyDialogFragment : DialogFragment() {
                     .build()
             fragmentManager?.let { it1 -> datePicker.show(it1, "TAG") }
             datePicker.addOnPositiveButtonClickListener {
-                homeActivitySharedViewModel.soldDate.value = it.toString()
+                homeActivitySharedViewModel.soldDate.value = (it / 1000).toString()
             }
         }
 
@@ -104,7 +96,8 @@ class FilterPropertyDialogFragment : DialogFragment() {
                     .build()
             fragmentManager?.let { it1 -> datePicker.show(it1, "TAG") }
             datePicker.addOnPositiveButtonClickListener {
-                homeActivitySharedViewModel.createDate.value = it.toString()
+                homeActivitySharedViewModel.createDate.value = (it / 1000).toString()
+                datePicker.dismiss()
             }
         }
 
@@ -140,6 +133,8 @@ class FilterPropertyDialogFragment : DialogFragment() {
     }
 
     private fun setInterestChips(interestList: List<String?>) {
+        chipsSelected.clear()
+        homeActivitySharedViewModel.interestList.value?.let { chipsSelected.addAll(it) }
         for (category in interestList) {
             val mChip =
                 this.layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
@@ -148,6 +143,7 @@ class FilterPropertyDialogFragment : DialogFragment() {
                 TypedValue.COMPLEX_UNIT_DIP, 10f,
                 resources.displayMetrics
             ).toInt()
+            mChip.isChecked = chipsSelected.contains(mChip.text)
             mChip.setPadding(paddingDp, 0, paddingDp, 0 )
             mChip.setOnCheckedChangeListener { compoundButton, b ->
                 if(b) {

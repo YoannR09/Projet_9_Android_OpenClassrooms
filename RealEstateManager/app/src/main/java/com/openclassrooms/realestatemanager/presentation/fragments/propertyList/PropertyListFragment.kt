@@ -6,9 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +28,10 @@ class PropertyListFragment : Fragment() {
     private var adapter: PropertyAdapter? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyList: TextView
+    private lateinit var mapFragment: FragmentContainerView
     private lateinit var filterButton: Button
+    private lateinit var mapButton: Button
+    private lateinit var classicView: LinearLayout
 
     private val homeActivitySharedViewModel by lazy {
         ViewModelProvider(requireActivity())[HomeActivitySharedViewModel::class.java]
@@ -46,9 +51,16 @@ class PropertyListFragment : Fragment() {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
             recyclerView = view.findViewById(R.id.rvPropertyList)
             recyclerView.layoutManager = LinearLayoutManager(activity)
+            mapFragment = view.findViewById(R.id.map_fragment)
             filterButton = view.findViewById(R.id.filter_button)
             filterButton.setOnClickListener {
                 showDialog()
+            }
+            classicView = view.findViewById(R.id.classic_list_view)
+            mapButton = view.findViewById(R.id.map_button)
+            mapButton.setOnClickListener {
+                classicView.visibility = View.GONE
+                mapFragment.visibility = View.VISIBLE
             }
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
                 override fun onEditButtonClick(index: Int) {

@@ -16,7 +16,6 @@
         <include
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar" />
-
         <ScrollView
             android:id="@+id/left_part"
             android:layout_width="0dp"

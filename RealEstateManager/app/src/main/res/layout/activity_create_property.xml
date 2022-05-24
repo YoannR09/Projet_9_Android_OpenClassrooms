@@ -36,6 +36,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="Property state"/>
+
            <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/sell_property_button"
                 android:layout_width="match_parent"

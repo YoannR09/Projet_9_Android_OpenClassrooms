@@ -38,17 +38,22 @@ class PropertyRepository(
 
     suspend fun createProperty(propertyEntity: PropertyEntity) {
         try {
-
+            dao.setProperty(propertyEntity)
+            api.createProperty(propertyEntity)
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
     }
 
     suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
         return try {
-            dao.updateStateProperty(state, date, propertyId)
+           api.updateStateProperty(state, date, propertyId)
         } catch (e: Exception){
-            e.printStackTrace()
+            try {
+                dao.updateStateProperty(state, date, propertyId)
+            }catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
 

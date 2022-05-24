@@ -191,13 +191,15 @@ class CreatePropertyActivityViewModel(
         }
     }
 
-    fun updateState(state: String) {
+    fun updateState(state: String, date: String?) {
         scope.launch {
-            var date = ""
-            if(state === PropertyState.SELL.name) {
-                date = Date().time.toString()
-            }
-            UpdateStatePropertyUseCase().updateStateProperty(state, date, property!!.id)
+            val dateToPass = date?: Date().time.toString()
+            /*
+                if(state === PropertyState.SELL.name) {
+                    date = Date().time.toString()
+                }
+             */
+            UpdateStatePropertyUseCase().updateStateProperty(state, dateToPass, property!!.id)
         }
     }
 }

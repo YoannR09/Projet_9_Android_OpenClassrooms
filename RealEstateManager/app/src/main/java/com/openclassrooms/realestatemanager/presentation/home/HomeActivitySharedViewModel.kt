@@ -31,11 +31,13 @@ class HomeActivitySharedViewModel: ViewModel() {
                 filters.picturesLength == null ||
                         findByPicturesLength(it, filters.picturesLength)
             }.filter {
+                println(" compare ${it.createDate } to ${filters.createdDate}")
                 filters.createdDate == null ||
-                        it.createDate.toDouble() >= filters.createdDate.toDouble()
+                        (it.createDate.toDouble() / 1000) >= filters.createdDate.toDouble()
             }.filter {
+                println(" compare ${it.soldDate } to ${filters.soldDate}")
                 filters.soldDate == null ||
-                        it.soldDate.toDouble() >= filters.soldDate.toDouble()
+                        (it.soldDate.toDouble() / 1000) >= filters.soldDate.toDouble()
             }.filter {
                 filters.interests == null || filters.interests.isEmpty() ||
                         findInterestPointFromList(it, filters.interests)
@@ -75,14 +77,7 @@ class HomeActivitySharedViewModel: ViewModel() {
     }
 
     private fun findInterestPointFromList(property: PropertyModel, interests: List<String>): Boolean {
-        var containsAll = true
-        interests.forEach{
-                interest ->
-            if(!property.interestPoints.contains(interest)) {
-                containsAll = false
-            }
-        }
-        return containsAll
+        return property.interestPoints.containsAll(interests)
     }
 
     fun setProperties(properties: List<PropertyModel>) {

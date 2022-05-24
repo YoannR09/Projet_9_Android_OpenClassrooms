@@ -69,6 +69,7 @@ class PropertiesFirebaseApi {
     }
 
     suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
+        println("PROPERT ON START ${propertyId}")
         return suspendCoroutine {
                 coroutine ->
             db.collection("property").document(propertyId).update(

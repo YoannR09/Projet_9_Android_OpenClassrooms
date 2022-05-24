@@ -15,13 +15,12 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
-import com.openclassrooms.realestatemanager.domain.usecases.property.UpdateStatePropertyUseCase
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.utils.PropertyState
-import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.observe
 
 class CreatePropertyActivity : AppCompatActivity() {
@@ -83,14 +82,30 @@ class CreatePropertyActivity : AppCompatActivity() {
             sellBar.visibility = View.GONE
         }
 
-        sellToggle.addOnButtonCheckedListener{ group, checkedId, _ ->
-            if (group.checkedButtonId == -1) {
-                group.check(checkedId)
-            }
-            if(checkedId == availableId) {
-                viewModel.updateState(PropertyState.AVAILABLE.name)
-            } else {
-                viewModel.updateState(PropertyState.SELL.name)
+        sellToggle.addOnButtonCheckedListener{ group, _, isCheck ->
+            // val oldChecked = group.checkedButtonId
+            if(isCheck) {
+                if(group.checkedButtonId == availableId) {
+                    group.check(availableId)
+                    viewModel.updateState(PropertyState.AVAILABLE.name, null)
+                } else {
+                    group.check(sellId)
+                    val datePicker =
+                        MaterialDatePicker.Builder.datePicker()
+                            .setTitleText("Property sell date")
+                            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                            .build()
+                    println("create picker here")
+                    datePicker.show(supportFragmentManager, "TAG")
+                    datePicker.addOnPositiveButtonClickListener {
+                            date ->
+                        viewModel.updateState(PropertyState.SELL.name, (date / 1000).toString())
+                    }
+                    datePicker.addOnCancelListener{
+                        // sellToggle.check(availableId)
+                    }
+
+                }
             }
         }
 

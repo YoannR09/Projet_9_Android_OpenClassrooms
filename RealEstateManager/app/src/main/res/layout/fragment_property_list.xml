@@ -5,7 +5,15 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.fragments.propertyList.PropertyListFragment">
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/map_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:context=".MapsActivity"
+            android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.MapsFragment" />
         <LinearLayout
+            android:id="@+id/classic_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
