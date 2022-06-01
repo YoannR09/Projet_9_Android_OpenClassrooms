@@ -5,54 +5,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.fragments.propertyList.PropertyListFragment">
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/map_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            tools:context=".MapsActivity"
-            android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.MapsFragment" />
         <LinearLayout
+            android:paddingTop="56dp"
             android:id="@+id/classic_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:orientation="horizontal">
-                        <Button
-                            android:id="@+id/filter_button"
-                            android:layout_width="0dp"
-                            android:layout_weight="0.5"
-                            android:layout_height="wrap_content"
-                            app:tint="@android:color/white"
-                            app:iconTint="@android:color/white"
-                            android:textColor="@android:color/white"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginEnd="5dp"
-                            android:text="Filter"
-                            app:icon="@drawable/ic_baseline_filter_list_24"
-                            style="?attr/materialButtonStyle"
-                            />
-                        <Button
-                            android:id="@+id/map_button"
-                            android:layout_width="0dp"
-                            android:layout_weight="0.5"
-                            android:textColor="@android:color/white"
-                            app:iconTint="@android:color/white"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="5dp"
-                            android:layout_marginEnd="5dp"
-                            app:tint="@android:color/white"
-                            android:text="Search map"
-                            app:icon="@drawable/ic_baseline_map_24"
-                            style="?attr/materialButtonStyle"
-                            android:layout_gravity="end"
-                            />
-                </LinearLayout>
-
                 <TextView
                     android:id="@+id/empty_list_text"
                     android:textAlignment="center"

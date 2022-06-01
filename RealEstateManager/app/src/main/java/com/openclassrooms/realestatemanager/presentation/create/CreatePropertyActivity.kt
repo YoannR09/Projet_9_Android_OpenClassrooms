@@ -129,12 +129,12 @@ class CreatePropertyActivity : AppCompatActivity() {
 
         viewModel.previousStep.observe(this, previous::setVisibility)
 
-        viewModel.nextStepIsVisible.observe(this, {
-            next.visibility = when(it) {
+        viewModel.nextStepIsVisible.observe(this) {
+            next.visibility = when (it) {
                 true -> View.VISIBLE
                 false -> View.GONE
             }
-        })
+        }
 
         viewModel.confirmButton.observe(this, confirm::setVisibility)
 

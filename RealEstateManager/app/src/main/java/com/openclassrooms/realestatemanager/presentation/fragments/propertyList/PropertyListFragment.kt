@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
+import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyDisplayActivity
 import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
@@ -29,8 +30,6 @@ class PropertyListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyList: TextView
     private lateinit var mapFragment: FragmentContainerView
-    private lateinit var filterButton: Button
-    private lateinit var mapButton: Button
     private lateinit var classicView: LinearLayout
 
     private val homeActivitySharedViewModel by lazy {
@@ -51,17 +50,6 @@ class PropertyListFragment : Fragment() {
             val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
             recyclerView = view.findViewById(R.id.rvPropertyList)
             recyclerView.layoutManager = LinearLayoutManager(activity)
-            mapFragment = view.findViewById(R.id.map_fragment)
-            filterButton = view.findViewById(R.id.filter_button)
-            filterButton.setOnClickListener {
-                showDialog()
-            }
-            classicView = view.findViewById(R.id.classic_list_view)
-            mapButton = view.findViewById(R.id.map_button)
-            mapButton.setOnClickListener {
-                classicView.visibility = View.GONE
-                mapFragment.visibility = View.VISIBLE
-            }
             adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
                 override fun onEditButtonClick(index: Int) {
                     CreatePropertyActivity
@@ -78,10 +66,10 @@ class PropertyListFragment : Fragment() {
                     viewModel.selectIndex(index)
                     (activity as HomeActivity).viewModel.changeSelectId(viewModel.properties.value[index].id)
                     if(!(activity as HomeActivity).viewModel.isLargeScreen) {
-                        val intent = Intent(
-                            it,
-                            PropertyFragment::class.java)
-                        it.startActivity(intent)
+                        PropertyDisplayActivity.start(
+                            context = requireContext(),
+                            property = homeActivitySharedViewModel.properties.value[index]
+                        )
                     }
 
                     adapter?.notifyItemChanged(index)
@@ -108,19 +96,6 @@ class PropertyListFragment : Fragment() {
             e.printStackTrace()
             inflater.inflate(R.layout.fragment_property_list, container, false)
         }
-    }
-
-    private fun showDialog() {
-        val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
-        val prev = requireFragmentManager().findFragmentByTag("dialog")
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-
-        // Create and show the dialog.
-        val newFragment: FilterPropertyDialogFragment = FilterPropertyDialogFragment.newInstance()
-        newFragment.show(ft, "dialog")
     }
 
     private fun implScreenState() {

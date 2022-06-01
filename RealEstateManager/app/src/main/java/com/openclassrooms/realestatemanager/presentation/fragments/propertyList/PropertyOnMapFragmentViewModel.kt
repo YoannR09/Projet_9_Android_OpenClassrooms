@@ -1,4 +1,10 @@
 package com.openclassrooms.realestatemanager.presentation.fragments.propertyList
 
-class PropertyOnMapFragmentViewModel {
-}
+import androidx.annotation.DrawableRes
+
+data class PropertyOnMapFragmentViewModel(
+    @DrawableRes val marker: Int,
+    val id: String,
+    val lat: Double,
+    val lng: Double
+)

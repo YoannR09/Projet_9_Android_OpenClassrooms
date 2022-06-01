@@ -17,14 +17,55 @@
             android:id="@+id/tool_bar"
             layout="@layout/tool_bar" />
 
-        <androidx.fragment.app.FragmentContainerView
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context=".presentation.home.HomeActivity"
+            android:padding="1dp"
+            android:id="@+id/container_fragment">
+
+        </FrameLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/tool_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            android:id="@+id/list_fragment"
-            tools:context=".MapsActivity"
-            android:name="com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment" />
+            android:padding="8dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/filter_button"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:layout_height="wrap_content"
+                app:tint="@android:color/white"
+                app:iconTint="@android:color/white"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="Filter"
+                app:icon="@drawable/ic_baseline_filter_list_24"
+                style="?attr/materialButtonStyle"
+                />
+            <Button
+                android:id="@+id/map_button"
+                android:layout_width="0dp"
+                android:layout_weight="0.5"
+                android:textColor="@android:color/white"
+                app:iconTint="@android:color/white"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:tint="@android:color/white"
+                android:text="Search map"
+                app:icon="@drawable/ic_baseline_map_24"
+                style="?attr/materialButtonStyle"
+                android:layout_gravity="end"
+                />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"

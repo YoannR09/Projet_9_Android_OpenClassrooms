@@ -45,12 +45,8 @@ class PropertyFragment : Fragment() {
     private val size: TextView get() = requireView().findViewById(R.id.property_size)
     private val addressText: TextView get() = requireView().findViewById(R.id.property_address)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_property, container, false)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         implScreenState()
 
         viewModel
@@ -64,7 +60,7 @@ class PropertyFragment : Fragment() {
 
                 val geoCoder = Geocoder(context)
                 addressText.text = propertySelected.city
-                var address: List<Address> = try {
+                val address: List<Address> = try {
                     geoCoder.getFromLocationName(propertySelected.city, 1)
                 }catch (e: Exception) {
                     listOf()
@@ -113,17 +109,26 @@ class PropertyFragment : Fragment() {
                 }
             }
 
-        (activity as HomeActivity).viewModel
-            .idSelected
-            .observe(viewLifecycleOwner) { id ->
-                if(id != "id") {
-                    viewModel.loadPropertyById(id)
-                } else {
-                    viewModel.screenState.value = ScreenStateNoData
+        try {
+            (activity as HomeActivity).viewModel
+                .idSelected
+                .observe(viewLifecycleOwner) { id ->
+                    if(id != "id") {
+                        viewModel.loadPropertyById(id)
+                    } else {
+                        viewModel.screenState.value = ScreenStateNoData
+                    }
                 }
-            }
-        return view
+        }catch (err: Exception) {
+            viewModel.loadPropertyById((activity as PropertyDisplayActivity).property!!.id)
+        }
+
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_property, container, false)
 
     private fun implScreenState() {
         viewModel

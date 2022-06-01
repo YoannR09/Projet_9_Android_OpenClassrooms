@@ -11,17 +11,23 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.material.appbar.MaterialToolbar
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyActivity
+import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.FilterPropertyDialogFragment
+import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.MapsFragment
+import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment
+
 
 class HomeActivity : AppCompatActivity() {
     private val DRAWER_ICON_ID = 16908332
@@ -37,6 +43,14 @@ class HomeActivity : AppCompatActivity() {
     lateinit var largeScreenList: View
     lateinit var navigationView: NavigationView
     lateinit var leaveButton: Button
+    private lateinit var filterButton: Button
+    private lateinit var mapButton: Button
+
+    private var listFragment: PropertyListFragment = PropertyListFragment()
+    private var mapFragment: MapsFragment = MapsFragment()
+    private var active: Fragment? = null
+
+    private val fm: FragmentManager = supportFragmentManager
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -65,6 +79,28 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initView() {
         setContentView(R.layout.activity_main)
+        for (fragment in fm.fragments) {
+            fm.beginTransaction().remove(fragment).commit()
+        }
+        fm.beginTransaction().add(R.id.container_fragment, mapFragment, "MAP")
+            .hide(mapFragment)
+            .commit()
+        fm.beginTransaction().add(R.id.container_fragment, listFragment, "LIST")
+            .hide(listFragment)
+            .commit()
+        if(active == null) {
+            fm.beginTransaction().show(listFragment).commit();
+            active = listFragment
+        }
+        filterButton = findViewById(R.id.filter_button)
+        filterButton.setOnClickListener {
+            showDialog()
+        }
+        mapButton = findViewById(R.id.map_button)
+        mapButton.setOnClickListener {
+            fm.beginTransaction().hide(active!!).show(mapFragment).commit();
+            active = mapFragment;
+        }
         toolbar = findViewById(R.id.tool_bar)
         drawer = findViewById(R.id.drawer)
         navigationView = findViewById(R.id.navigation_view)
@@ -101,6 +137,19 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDialog() {
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("dialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+
+        // Create and show the dialog.
+        val newFragment: FilterPropertyDialogFragment = FilterPropertyDialogFragment.newInstance()
+        newFragment.show(ft, "dialog")
+    }
+
     /**
      * This method return to Freibase auth activity
      * And lohout if current firebase session has active
@@ -129,4 +178,5 @@ class HomeActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
 }

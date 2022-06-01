@@ -69,18 +69,16 @@
                         android:layout_height="wrap_content"
                         app:singleSelection="true"
                         android:layout_marginStart="16dp">
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/toggle_dollar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textSize="16sp"
                             android:text="$"
-                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                             />
 
-                        <Button
+                        <com.google.android.material.button.MaterialButton
                             android:id="@+id/toggle_euro"
-                            style="@style/Widget.App.Button.OutlinedButton.IconOnly"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:text="€"
