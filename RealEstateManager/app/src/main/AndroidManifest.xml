@@ -46,7 +46,8 @@
 
         <activity
             android:name=".presentation.fragments.property.PropertyDisplayActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Material"/>
 
         <activity
             android:name=".presentation.create.CreatePropertyActivity"

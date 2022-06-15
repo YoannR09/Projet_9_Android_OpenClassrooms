@@ -21,82 +21,78 @@ import com.openclassrooms.realestatemanager.presentation.fragments.property.Prop
 import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyFragment
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
+import com.openclassrooms.realestatemanager.utils.isLargeScreen
 import com.openclassrooms.realestatemanager.utils.observe
 import java.util.*
 
 class PropertyListFragment : Fragment() {
 
     private var adapter: PropertyAdapter? = null
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var emptyList: TextView
-    private lateinit var mapFragment: FragmentContainerView
-    private lateinit var classicView: LinearLayout
+    private val recyclerView: RecyclerView get() = requireView().findViewById(R.id.rvPropertyList)
+    private val emptyList: TextView get() = requireView().findViewById(R.id.empty_list_text)
 
     private val homeActivitySharedViewModel by lazy {
         ViewModelProvider(requireActivity())[HomeActivitySharedViewModel::class.java]
     }
 
     private val viewModel by lazy {
-        ViewModelProvider(this,
+        ViewModelProvider(
+            this,
             PropertyListFragmentViewModelFactory(
                 homeActivitySharedViewModel = homeActivitySharedViewModel
             )
         )[PropertyListFragmentViewModel::class.java]
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return try {
-            val view: View = inflater.inflate(R.layout.fragment_property_list, container, false)
-            recyclerView = view.findViewById(R.id.rvPropertyList)
-            recyclerView.layoutManager = LinearLayoutManager(activity)
-            adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
-                override fun onEditButtonClick(index: Int) {
-                    CreatePropertyActivity
-                        .start(
-                            context = activity!!,
-                            property = homeActivitySharedViewModel.properties.value[index]
-                        )
-                }
-
-                override fun onItemClick(index: Int) {
-                    val lastIndex = viewModel.properties.value.indexOfFirst {
-                        it.isSelected
-                    }
-                    viewModel.selectIndex(index)
-                    (activity as HomeActivity).viewModel.changeSelectId(viewModel.properties.value[index].id)
-                    if(!(activity as HomeActivity).viewModel.isLargeScreen) {
-                        PropertyDisplayActivity.start(
-                            context = requireContext(),
-                            property = homeActivitySharedViewModel.properties.value[index]
-                        )
-                    }
-
-                    adapter?.notifyItemChanged(index)
-                   if(lastIndex >= 0) {
-                       adapter?.notifyItemChanged(lastIndex)
-                   }
-                }
-            }) }
-            recyclerView.adapter = adapter
-            this.emptyList = view.findViewById(R.id.empty_list_text)
-            viewModel.properties.observe(this) {
-                result ->
-                if(result.isEmpty()) {
-                    this.emptyList.visibility = View.VISIBLE
-                } else {
-                    this.emptyList.visibility = View.GONE
-                }
-                adapter?.updateList(result)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView.layoutManager = LinearLayoutManager(activity)
+        adapter = (activity as HomeActivity?)?.let { PropertyAdapter(ArrayList(), listener = object : PropertyAdapterListener {
+            override fun onEditButtonClick(index: Int) {
+                CreatePropertyActivity
+                    .start(
+                        context = activity!!,
+                        property = homeActivitySharedViewModel.properties.value[index]
+                    )
             }
-            implScreenState()
-            viewModel.loadProperties()
-            view
-        } catch (e: Exception) {
-            e.printStackTrace()
-            inflater.inflate(R.layout.fragment_property_list, container, false)
+
+            override fun onItemClick(index: Int) {
+                val lastIndex = viewModel.properties.value.indexOfFirst {
+                    it.isSelected
+                }
+                viewModel.selectIndex(index)
+                (activity as HomeActivity).viewModel.changeSelectId(viewModel.properties.value[index].id)
+                if(!requireContext().isLargeScreen) {
+                    PropertyDisplayActivity.start(
+                        context = requireContext(),
+                        property = homeActivitySharedViewModel.properties.value[index]
+                    )
+                }
+
+                adapter?.notifyItemChanged(index)
+                if(lastIndex >= 0) {
+                    adapter?.notifyItemChanged(lastIndex)
+                }
+            }
+        }) }
+        recyclerView.adapter = adapter
+        viewModel.properties.observe(this) {
+                result ->
+            if(result.isEmpty()) {
+                emptyList.visibility = View.VISIBLE
+            } else {
+                emptyList.visibility = View.GONE
+            }
+            adapter?.updateList(result)
         }
+        implScreenState()
+        viewModel.loadProperties()
     }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_property_list, container, false)
 
     private fun implScreenState() {
         viewModel

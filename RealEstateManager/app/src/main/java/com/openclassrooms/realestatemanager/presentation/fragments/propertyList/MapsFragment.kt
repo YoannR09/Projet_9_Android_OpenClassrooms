@@ -18,8 +18,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.presentation.fragments.property.PropertyDisplayActivity
+import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
 import com.openclassrooms.realestatemanager.presentation.mappers.asPropertyOnMapViewModel
+import com.openclassrooms.realestatemanager.utils.isLargeScreen
 import com.openclassrooms.realestatemanager.utils.observe
 
 
@@ -62,7 +65,16 @@ class MapsFragment : Fragment() {
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(48.858235, 2.294571), 15F))
         googleMap.setOnMarkerClickListener {
             marker ->
-            println(" ${marker}")
+            val lastIndex = viewModel.properties.value.indexOfFirst {
+                it.id == marker.id
+            }
+            (activity as HomeActivity).viewModel.changeSelectId(viewModel.properties.value[lastIndex].id)
+            if(!requireContext().isLargeScreen) {
+                PropertyDisplayActivity.start(
+                    context = requireContext(),
+                    property = homeActivitySharedViewModel.properties.value[lastIndex]
+                )
+            }
             true
         }
     }

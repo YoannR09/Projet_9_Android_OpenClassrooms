@@ -27,25 +27,28 @@ import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyAc
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.FilterPropertyDialogFragment
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.MapsFragment
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment
+import com.openclassrooms.realestatemanager.utils.observe
 
+
+enum class HomeFragmentState {
+    LIST,
+    MAP
+}
 
 class HomeActivity : AppCompatActivity() {
     private val DRAWER_ICON_ID = 16908332
     val viewModel: HomeActivityViewModel by lazy {
         ViewModelProvider(this)[HomeActivityViewModel::class.java]
     }
-    val sharedViewModel by lazy {
 
-    }
-    lateinit var toolbar: MaterialToolbar
-    lateinit var agent: TextView
-    lateinit var drawer: DrawerLayout
-    lateinit var largeScreenList: View
-    lateinit var navigationView: NavigationView
-    lateinit var leaveButton: Button
-    private lateinit var filterButton: Button
-    private lateinit var mapButton: Button
-
+    private val toolbar: MaterialToolbar get() = findViewById(R.id.tool_bar)
+    private val agent: TextView get() = navigationView.getHeaderView(0).findViewById(R.id.agent_title)
+    private val drawer: DrawerLayout get() = findViewById(R.id.drawer)
+    private val navigationView: NavigationView get() = findViewById(R.id.navigation_view)
+    private val leaveButton: Button get() =  navigationView.getHeaderView(0).findViewById(R.id.leave_button)
+    private val filterButton: Button get() = findViewById(R.id.filter_button)
+    private val mapButton: Button get() = findViewById(R.id.map_button)
+    private val listButton: Button get() = findViewById(R.id.list_button)
     private var listFragment: PropertyListFragment = PropertyListFragment()
     private var mapFragment: MapsFragment = MapsFragment()
     private var active: Fragment? = null
@@ -79,9 +82,6 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initView() {
         setContentView(R.layout.activity_main)
-        for (fragment in fm.fragments) {
-            fm.beginTransaction().remove(fragment).commit()
-        }
         fm.beginTransaction().add(R.id.container_fragment, mapFragment, "MAP")
             .hide(mapFragment)
             .commit()
@@ -92,33 +92,33 @@ class HomeActivity : AppCompatActivity() {
             fm.beginTransaction().show(listFragment).commit();
             active = listFragment
         }
-        filterButton = findViewById(R.id.filter_button)
+        viewModel.mapButton.observe(this, mapButton::setVisibility)
+        viewModel.listButton.observe(this, listButton::setVisibility)
+        viewModel.fragmentState.observe(this) {
+            active = when(it) {
+                HomeFragmentState.LIST ->  {
+                    fm.beginTransaction().hide(active!!).show(listFragment).commit();
+                    listFragment
+                }
+                HomeFragmentState.MAP -> {
+                    fm.beginTransaction().hide(active!!).show(mapFragment).commit();
+                    mapFragment
+                }
+            }
+        }
+        listButton.setOnClickListener {
+            viewModel.fragmentState.value = HomeFragmentState.LIST
+        }
         filterButton.setOnClickListener {
             showDialog()
         }
-        mapButton = findViewById(R.id.map_button)
         mapButton.setOnClickListener {
-            fm.beginTransaction().hide(active!!).show(mapFragment).commit();
-            active = mapFragment;
+          viewModel.fragmentState.value = HomeFragmentState.MAP
         }
-        toolbar = findViewById(R.id.tool_bar)
-        drawer = findViewById(R.id.drawer)
-        navigationView = findViewById(R.id.navigation_view)
-        agent = navigationView.getHeaderView(0).findViewById(R.id.agent_title)
-        leaveButton = navigationView.getHeaderView(0).findViewById(R.id.leave_button)
         leaveButton.setOnClickListener {
             logoutToRefreshMainActivity()
         }
         agent.text = FirebaseAuth.getInstance().currentUser?.email
-        var isLargeScreen: Boolean
-        try {
-            largeScreenList = findViewById(R.id.large_screen_list)
-            isLargeScreen = true
-        }catch (e: NullPointerException) {
-            isLargeScreen = false
-        }
-
-        viewModel.isLargeScreen = isLargeScreen
         setSupportActionBar(toolbar)
     }
 
@@ -155,6 +155,7 @@ class HomeActivity : AppCompatActivity() {
      * And lohout if current firebase session has active
      */
     private fun logoutToRefreshMainActivity() {
+        FirebaseAuth.getInstance().signOut()
         val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
