@@ -55,29 +55,16 @@ class PropertyFragment : Fragment() {
                 val dollarId = toggleButton[0].id
                 val euroId = toggleButton[1].id
 
-                var latitude = 48.858235
-                var longitude = 2.294571
-
-                val geoCoder = Geocoder(context)
                 addressText.text = propertySelected.city
-                val address: List<Address> = try {
-                    geoCoder.getFromLocationName(propertySelected.city, 1)
-                }catch (e: Exception) {
-                    listOf()
-                }
-                if(address.isNotEmpty()) {
-                    latitude = address[0].latitude;
-                    longitude = address[0].longitude;
-                }
                 val url =
-                    "https://maps.google.com/maps/api/staticmap?center=$latitude,$longitude&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
+                    "https://maps.google.com/maps/api/staticmap?center=${propertySelected.lat},${propertySelected.lng}&zoom=15&size=400x400&sensor=false&key=AIzaSyD6Gm3ulw2mdlx06It708hHVvJgbdFsBm4"
                 val circularProgressDrawable
-                        = CircularProgressDrawable(RealStateManagerApplication.contextApp)
+                        = CircularProgressDrawable(requireContext())
                 circularProgressDrawable.strokeWidth = 5f
                 circularProgressDrawable.centerRadius = 30f
                 circularProgressDrawable.start()
                 try {
-                    Glide.with(RealStateManagerApplication.contextApp)
+                    Glide.with(requireContext())
                         .load(url)
                         .placeholder(circularProgressDrawable).into(this.map)
                 } catch (e: Exception) {
@@ -113,7 +100,7 @@ class PropertyFragment : Fragment() {
             (activity as HomeActivity).viewModel
                 .idSelected
                 .observe(viewLifecycleOwner) { id ->
-                    if(id != "id") {
+                    if(id != null) {
                         viewModel.loadPropertyById(id)
                     } else {
                         viewModel.screenState.value = ScreenStateNoData

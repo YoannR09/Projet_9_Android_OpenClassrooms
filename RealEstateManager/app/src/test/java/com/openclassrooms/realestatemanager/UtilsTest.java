@@ -17,7 +17,14 @@ public class UtilsTest {
         String date = Utils.getTodayDate();
 
         // THEN
-        assertEquals(date.substring(0, 2), String.valueOf(new Date().getDate()));
+        int newDate = new Date().getDate();
+        String stringDate = "";
+        if(newDate < 10) {
+            stringDate = '0' + String.valueOf(newDate);
+        } else {
+            stringDate = String.valueOf(newDate);
+        }
+        assertEquals(date.substring(0, 2),stringDate);
         if(new Date().getMonth() + 1 < 10) {
             assertEquals(date.substring(3, 5), '0' + String.valueOf(new Date().getMonth() + 1));
         } else {

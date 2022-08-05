@@ -1,9 +1,19 @@
 package com.openclassrooms.realestatemanager.data.dao
 
 import android.content.res.Resources
+import android.util.Log
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.OnFailureListener
+import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.Task
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
+import java.lang.Error
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -69,7 +79,6 @@ class PropertiesFirebaseApi {
     }
 
     suspend fun updateStateProperty(state: String, date: String, propertyId: String) {
-        println("PROPERT ON START ${propertyId}")
         return suspendCoroutine {
                 coroutine ->
             db.collection("property").document(propertyId).update(
@@ -89,30 +98,39 @@ class PropertiesFirebaseApi {
     suspend fun updateProperty(propertyEntity: PropertyEntity) {
         return suspendCoroutine {
                 coroutine ->
-            db.collection("property").document(propertyEntity.id)
-                .update("description", propertyEntity.description,
-                    "interestPoint", propertyEntity.interestPoints,
-                    "meter", propertyEntity.meter,
-                    "picturesList", propertyEntity.picturesList,
-                    "pieces", propertyEntity.pieces,
-                    "price", propertyEntity.price,
-                    "type", propertyEntity.type)
-                .addOnSuccessListener {
-                    coroutine.resume(Unit)
+            val rootRef: FirebaseFirestore = FirebaseFirestore.getInstance()
+            val eventsRef: CollectionReference = rootRef.collection("property")
+            val docIdQuery: Query = eventsRef.whereEqualTo("id", propertyEntity.id)
+            docIdQuery.get().addOnSuccessListener { task ->
+                for (document in task.documents) {
+                    document.reference.update("description", propertyEntity.description,
+                        "interestPoint", propertyEntity.interestPoints,
+                        "meter", propertyEntity.meter,
+                        "picturesList", propertyEntity.picturesList,
+                        "pieces", propertyEntity.pieces,
+                        "price", propertyEntity.price,
+                        "type", propertyEntity.type,
+                        "soldDate", propertyEntity.soldDate,
+                        "state", propertyEntity.state,
+                        "address", propertyEntity.address)
+                        .addOnSuccessListener {
+                            coroutine.resume(Unit)
+                        }.addOnFailureListener {
+                            it.printStackTrace()
+                        }
                 }
-                .addOnFailureListener {
-                        err ->
-                    err.printStackTrace()
-                    throw Resources.NotFoundException()
-                }
+            }.addOnFailureListener {
+                it.printStackTrace()
+            }
         }
     }
+
 
     /**
      * Shouldn't be impl on this project
      */
     fun deleteProperty(id: String) {
-        TODO("Not yet implemented")
+        throw Error("Shouldn't be impl on this project")
     }
 
 }

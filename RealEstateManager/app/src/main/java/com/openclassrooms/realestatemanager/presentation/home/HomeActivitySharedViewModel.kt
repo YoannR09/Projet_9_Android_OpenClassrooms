@@ -3,6 +3,9 @@ package com.openclassrooms.realestatemanager.presentation.home
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.domain.models.FilterModel
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.toModel
+import com.openclassrooms.realestatemanager.utils.InterestPoint
 import com.openclassrooms.realestatemanager.utils.combineStateFlows
 import com.openclassrooms.realestatemanager.utils.scope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,6 +64,10 @@ class HomeActivitySharedViewModel: ViewModel() {
             soldDate = soldDate.value,
             createdDate = createDate.value,
             interests = interestList.value
+                ?.map { string ->
+                    PropertyLocationTypeUiModel.values().first { it.title == string }
+                        .toModel()
+                }
         )
     }
 
@@ -76,7 +83,7 @@ class HomeActivitySharedViewModel: ViewModel() {
         return type == "ALL" || propertyModel.type == type
     }
 
-    private fun findInterestPointFromList(property: PropertyModel, interests: List<String>): Boolean {
+    private fun findInterestPointFromList(property: PropertyModel, interests: List<InterestPoint>): Boolean {
         return property.interestPoints.containsAll(interests)
     }
 

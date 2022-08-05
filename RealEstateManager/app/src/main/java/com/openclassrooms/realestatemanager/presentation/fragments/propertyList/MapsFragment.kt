@@ -66,7 +66,7 @@ class MapsFragment : Fragment() {
         googleMap.setOnMarkerClickListener {
             marker ->
             val lastIndex = viewModel.properties.value.indexOfFirst {
-                it.id == marker.id
+                it.id == marker.title
             }
             (activity as HomeActivity).viewModel.changeSelectId(viewModel.properties.value[lastIndex].id)
             if(!requireContext().isLargeScreen) {

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +17,9 @@ import com.openclassrooms.realestatemanager.utils.observe
 
 class PictureListFragment : Fragment() {
     private var adapter: PictureAdapter? = null
-    private lateinit var recyclerView: RecyclerView
+    private val recyclerView: RecyclerView get() = requireView().findViewById(R.id.rvPictureList)
+
+    private val emptyList: TextView get() = requireView().findViewById(R.id.empty_picture_list_text)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,20 +28,22 @@ class PictureListFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return try {
-            val view: View = inflater.inflate(R.layout.fragment_picture_list, container, false)
-            recyclerView = view.findViewById(R.id.rvPictureList)
-            recyclerView.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
-            adapter = PictureAdapter(arrayListOf())
-            (parentFragment as PropertyFragment).viewModel.property.observe(viewLifecycleOwner) {
-                adapter!!.updateList(it.pictureList)
+        return inflater.inflate(R.layout.fragment_picture_list, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL, false)
+        adapter = PictureAdapter(arrayListOf())
+        (parentFragment as PropertyFragment).viewModel.property.observe(viewLifecycleOwner) {
+            if(it.pictureList.isNotEmpty()) {
+                emptyList.visibility = View.GONE
+            } else {
+                emptyList.visibility = View.VISIBLE
             }
-            recyclerView.adapter = adapter
-            view
-        } catch (e: Exception) {
-            e.printStackTrace()
-            inflater.inflate(R.layout.fragment_picture_list, container, false)
+            adapter!!.updateList(it.pictureList)
         }
+        recyclerView.adapter = adapter
     }
 
 }

@@ -11,8 +11,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.openclassrooms.realestatemanager.data.database.RealEstateManagerDatabase
 import com.openclassrooms.realestatemanager.data.database.RealEstateManagerDatabase_Impl
 import com.openclassrooms.realestatemanager.domain.providers.PropertyContentProvider
-import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.*
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -57,7 +56,7 @@ class ContentProvidersTest {
                 0
             ), null, null, null, null
         )
-        assertThat(cursor, notNullValue())
+        assertThat(cursor, nullValue())
         cursor?.close()
     }
 

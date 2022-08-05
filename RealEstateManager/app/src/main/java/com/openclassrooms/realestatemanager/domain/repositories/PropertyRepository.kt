@@ -59,7 +59,8 @@ class PropertyRepository(
 
     suspend fun updateProperty(propertyEntity: PropertyEntity) {
         return try {
-            //dao.updateProperty(propertyEntity)
+            dao.setProperty(propertyEntity)
+            api.updateProperty(propertyEntity)
         } catch (e: Exception){
             e.printStackTrace()
         }

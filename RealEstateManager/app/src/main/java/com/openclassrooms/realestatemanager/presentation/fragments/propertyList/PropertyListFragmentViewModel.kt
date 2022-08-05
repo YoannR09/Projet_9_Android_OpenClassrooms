@@ -49,6 +49,7 @@ class PropertyListFragmentViewModel(
                     screenState.value = ScreenStateSuccess
                     homeActivitySharedViewModel.setProperties(it)
                 }.onFailure {
+                    it.printStackTrace()
                     screenState.value = ScreenStateError(it.message ?: "We have an error")
                 }
         }

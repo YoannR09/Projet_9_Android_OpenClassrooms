@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -49,11 +48,15 @@ class HomeActivity : AppCompatActivity() {
     private val filterButton: Button get() = findViewById(R.id.filter_button)
     private val mapButton: Button get() = findViewById(R.id.map_button)
     private val listButton: Button get() = findViewById(R.id.list_button)
-    private var listFragment: PropertyListFragment = PropertyListFragment()
-    private var mapFragment: MapsFragment = MapsFragment()
+    private val listFragment: PropertyListFragment by lazy {
+        PropertyListFragment()
+    }
+    private val mapFragment: MapsFragment by lazy {
+        MapsFragment()
+    }
     private var active: Fragment? = null
 
-    private val fm: FragmentManager = supportFragmentManager
+    private val fm: FragmentManager get() = supportFragmentManager
 
     private val signInLauncher = registerForActivityResult(
             FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
@@ -88,20 +91,24 @@ class HomeActivity : AppCompatActivity() {
         fm.beginTransaction().add(R.id.container_fragment, listFragment, "LIST")
             .hide(listFragment)
             .commit()
-        if(active == null) {
-            fm.beginTransaction().show(listFragment).commit();
-            active = listFragment
-        }
-        viewModel.mapButton.observe(this, mapButton::setVisibility)
-        viewModel.listButton.observe(this, listButton::setVisibility)
-        viewModel.fragmentState.observe(this) {
-            active = when(it) {
+        viewModel.mapButton.observe(this, action = mapButton::setVisibility)
+        viewModel.listButton.observe(this, action = listButton::setVisibility)
+        viewModel.fragmentState.observe(this) { state ->
+            active = when(state) {
                 HomeFragmentState.LIST ->  {
-                    fm.beginTransaction().hide(active!!).show(listFragment).commit();
+                    fm.beginTransaction().apply {
+                        active?.let {
+                            hide(it)
+                        }
+                    }.show(listFragment).commit()
                     listFragment
                 }
                 HomeFragmentState.MAP -> {
-                    fm.beginTransaction().hide(active!!).show(mapFragment).commit();
+                    fm.beginTransaction().apply {
+                        active?.let {
+                            hide(it)
+                        }
+                    }.show(mapFragment).commit()
                     mapFragment
                 }
             }

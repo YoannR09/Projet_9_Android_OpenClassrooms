@@ -14,9 +14,10 @@ import android.util.TypedValue
 
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.toUIModel
+import com.openclassrooms.realestatemanager.utils.InterestPoint
 import com.openclassrooms.realestatemanager.utils.observe
-
 
 class GeneralInfoStepFragment : Fragment() {
 
@@ -25,8 +26,6 @@ class GeneralInfoStepFragment : Fragment() {
     private val selectType: TextInputLayout get() = requireView().findViewById(R.id.menu)
     private val inputSelectType: AutoCompleteTextView get() = requireView().findViewById(R.id.input_type)
     private val chipsInterest: ChipGroup get() = requireView().findViewById(R.id.chips_list_interest)
-
-    private val chipsSelected: ArrayList<String> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +40,7 @@ class GeneralInfoStepFragment : Fragment() {
             inputAddress.setText(it)
         }
         inputAddress.addTextChangedListener {
+            inputAddress.setSelection(inputAddress.length()) // fix cursos bug
             (activity as CreatePropertyActivity).viewModel.address.value = it.toString()
         }
 
@@ -48,12 +48,14 @@ class GeneralInfoStepFragment : Fragment() {
             inputDescription.setText(it)
         }
         inputDescription.addTextChangedListener {
+            inputDescription.setSelection(inputDescription.length()) // fix cursos bug
             (activity as CreatePropertyActivity).viewModel.description.value = it.toString()
         }
 
         viewModel.type.observe(this) {
             inputSelectType.setText(it, false)
         }
+
         inputSelectType.addTextChangedListener {
             (activity as CreatePropertyActivity).viewModel.type.value = it.toString()
         }
@@ -61,29 +63,26 @@ class GeneralInfoStepFragment : Fragment() {
         val items = (activity as CreatePropertyActivity).viewModel.types.map { it.title }
         val adapter = ArrayAdapter(requireContext(), R.layout.type_item, items)
         (selectType.editText as? AutoCompleteTextView)?.setAdapter(adapter)
-        setInterestChips((activity as CreatePropertyActivity).viewModel.interest.map { it.title })
+
+        (activity as CreatePropertyActivity).viewModel.interestPoint.observe(this){
+            setInterestChips((activity as CreatePropertyActivity).viewModel.interest, it)
+        }
     }
 
-    private fun setInterestChips(interestList: List<String?>) {
-        chipsSelected.clear()
-        (activity as CreatePropertyActivity).viewModel.interestPoint.value.let { chipsSelected.addAll(it) }
+    private fun setInterestChips(interestList: Array<PropertyLocationTypeUiModel>, selectedInterests: List<InterestPoint>) {
+        val selectedTitles = selectedInterests.map { it.toUIModel().title }
+        chipsInterest.removeAllViews()
         for (category in interestList) {
-            val mChip =
-                this.layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
-            mChip.text = category
+            val mChip = layoutInflater.inflate(R.layout.item_chip_interest, null, false) as Chip
+            mChip.text = category.title
             val paddingDp = TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, 10f,
                 resources.displayMetrics
             ).toInt()
-            mChip.isSelected = chipsSelected.contains(mChip.text)
+            mChip.isSelected = selectedTitles.contains(mChip.text)
             mChip.setPadding(paddingDp, 0, paddingDp, 0 )
             mChip.setOnCheckedChangeListener { compoundButton, b ->
-                if(b) {
-                    chipsSelected.add(compoundButton.text.toString())
-                } else {
-                    chipsSelected.remove(compoundButton.text.toString())
-                }
-                (activity as CreatePropertyActivity).viewModel.interestPoint.value = chipsSelected
+                (activity as CreatePropertyActivity).viewModel.toggleInterestWithName(compoundButton.text.toString())
             }
             chipsInterest.addView(mChip)
         }

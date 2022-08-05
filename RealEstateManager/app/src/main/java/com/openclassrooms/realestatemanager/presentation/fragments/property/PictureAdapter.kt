@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.google.firebase.storage.FirebaseStorage
@@ -76,8 +78,12 @@ class PictureAdapter (data: List<PictureModel>?
                         imageView.setImageBitmap(bm)
                     }.addOnFailureListener {
                         // Handle any errors
+                        imageView.setImageBitmap(
+                            ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
                     }
             } catch (e: Exception) {
+                imageView.setImageBitmap(
+                    ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
                 e.printStackTrace()
             }
         }

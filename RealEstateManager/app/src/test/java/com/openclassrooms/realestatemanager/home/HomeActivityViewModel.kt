@@ -41,7 +41,7 @@ class HomeActivityViewModelTest {
     @ExperimentalCoroutinesApi
     @Test
     fun checkIdSelected() = runTest {
-        assertTrue(model.idSelected.value === "id")
+        assertTrue(model.idSelected.value === null)
         model.changeSelectId("newId")
         assertTrue(model.idSelected.value === "newId")
     }

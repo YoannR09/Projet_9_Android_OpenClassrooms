@@ -20,6 +20,7 @@ class ConfirmStepFragment : Fragment() {
     private val confirmPieces: TextView get() = requireView().findViewById(R.id.confirm_pieces)
     private val confirmPrice: TextView get() = requireView().findViewById(R.id.confirm_price)
     private val confirmSize: TextView get() = requireView().findViewById(R.id.confirm_size)
+    private val picturesLength: TextView get() = requireView().findViewById(R.id.picturesLength)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class ConfirmStepFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         completeObsGeneral()
         completeObsPurchase()
+        completeObsPictures()
     }
 
     private fun completeObsPurchase() {
@@ -60,6 +62,12 @@ class ConfirmStepFragment : Fragment() {
         }
         (activity as CreatePropertyActivity).viewModel.description.observe(this) {
             confirmDescription.text = it
+        }
+    }
+
+    private fun completeObsPictures() {
+        (activity as CreatePropertyActivity).viewModel.pictureList.observe(this) {
+            picturesLength.text = it.size.toString()
         }
     }
 

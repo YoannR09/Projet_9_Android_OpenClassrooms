@@ -2,24 +2,25 @@ package com.openclassrooms.realestatemanager.presentation.create
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Context
+import android.location.Address
+import android.location.Geocoder
 import android.os.Build
 import android.view.View
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
-import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
-import com.openclassrooms.realestatemanager.domain.models.PictureModel
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.domain.usecases.property.CreatePropertyUseCase
-import com.openclassrooms.realestatemanager.domain.usecases.property.UpdateStatePropertyUseCase
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
+import com.openclassrooms.realestatemanager.domain.usecases.property.UpdatePropertyUseCase
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyTypeUiModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.toModel
 import com.openclassrooms.realestatemanager.presentation.mappers.asEntity
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,11 +46,11 @@ class CreatePropertyActivityViewModel(
     val property: PropertyModel?
 ): ViewModel() {
 
-    lateinit var id: String;
+    val id = MutableStateFlow(property?.id)
 
     val types get() = PropertyTypeUiModel.values()
 
-    val interest get() = PropertyInterestPointUiModel.values()
+    val interest get() = PropertyLocationTypeUiModel.values()
 
     val screenState = MutableStateFlow<ScreenStateCreateProperty>(ScreenStateNothing)
 
@@ -118,7 +119,11 @@ class CreatePropertyActivityViewModel(
     val price = MutableStateFlow(property?.price ?: 0)
     //endregion
 
-    val pictureList = MutableStateFlow(property?.picturesList ?: listOf<PictureModel>())
+    //region State
+    val soldDate = MutableStateFlow(property?.soldDate ?: "0")
+    val state = MutableStateFlow(property?.state?.let(PropertyState::valueOf) ?: PropertyState.AVAILABLE)
+
+    val pictureList = MutableStateFlow(property?.picturesList ?: listOf())
 
     val generalInfoCheckForm = combineStateFlows(scope, address, description, type) { address, description, type ->
         when {
@@ -138,25 +143,45 @@ class CreatePropertyActivityViewModel(
         }
     }
 
-    fun createProperty(startActivity: () -> Unit) {
+    fun createProperty(context: Context, startActivity: () -> Unit) {
         try {
+            val geoCoder = Geocoder(context)
+            val addressLatLng: List<Address> = try {
+                geoCoder.getFromLocationName(address.value, 1)
+            }catch (e: Exception) {
+                listOf()
+            }
+            var latitude = 48.858235
+            var longitude = 2.294571
+            if(addressLatLng.isNotEmpty()) {
+                latitude = addressLatLng[0].latitude;
+                longitude = addressLatLng[0].longitude;
+            }
             val newProperty = PropertyEntity(
-                id = Date().time.toString() + "-" + FirebaseAuth.getInstance().currentUser!!.email!!,
+                id = id.value
+                    ?: (Date().time.toString() + "-" + FirebaseAuth.getInstance().currentUser!!.email!!),
                 type = type.value,
                 address = address.value,
                 description = description.value,
                 price = price.value,
                 meter = size.value,
                 pieces = pieces.value,
-                state = PropertyState.AVAILABLE.name,
+                state = state.value.name,
                 createDate = Date().time.toString(),
-                interestPoints = arrayListOf(*interestPoint.value.toTypedArray()),
+                interestPoints = arrayListOf(*interestPoint.value.map { it.name }.toTypedArray()),
                 picturesList = pictureList.value.map { it.asEntity() },
-                soldDate = "",
-                agentId = FirebaseAuth.getInstance().currentUser!!.email!!
+                soldDate = soldDate.value,
+                agentId = FirebaseAuth.getInstance().currentUser!!.email!!,
+                lat = latitude,
+                lng = longitude
             )
             scope.launch {
-                CreatePropertyUseCase().createProperty(newProperty)
+                if(property != null) {
+                    UpdatePropertyUseCase().updateProperty(newProperty)
+                } else {
+                    CreatePropertyUseCase().createProperty(newProperty)
+                }
+
                 createNotificationChannel()
                 val builder: NotificationCompat.Builder =
                     NotificationCompat.Builder(RealStateManagerApplication.context, "channel_id")
@@ -191,15 +216,16 @@ class CreatePropertyActivityViewModel(
         }
     }
 
-    fun updateState(state: String, date: String?) {
-        scope.launch {
-            val dateToPass = date?: Date().time.toString()
-            /*
-                if(state === PropertyState.SELL.name) {
-                    date = Date().time.toString()
-                }
-             */
-            UpdateStatePropertyUseCase().updateStateProperty(state, dateToPass, property!!.id)
+    fun toggleInterestWithName(name: String) {
+        val interest = PropertyLocationTypeUiModel.values().first { it.title == name }
+        val list = interestPoint.value.toMutableList()
+        val model = interest.toModel()
+
+        if(!interestPoint.value.contains(model)) {
+            list.add(model)
+        } else {
+            list.remove(model)
         }
+        interestPoint.value = list
     }
 }

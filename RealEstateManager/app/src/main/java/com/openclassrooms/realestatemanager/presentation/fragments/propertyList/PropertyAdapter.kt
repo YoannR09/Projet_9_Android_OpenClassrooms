@@ -87,26 +87,30 @@ class PropertyAdapter(
             this.title.text = property.name
             this.city.text = property.city
             this.price.text = property.price
-            val circularProgressDrawable
-                    = CircularProgressDrawable(itemView.context)
-            circularProgressDrawable.strokeWidth = 5f
-            circularProgressDrawable.centerRadius = 30f
-            circularProgressDrawable.start()
-            val url = property.mainPictureUrl
-            val mImageRef = FirebaseStorage.getInstance().getReference(url)
-            val oneMegaByte = (1024 * 1024).toLong()
-            mImageRef.getBytes(oneMegaByte)
-                .addOnSuccessListener {
-                    val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
-                    val dm = DisplayMetrics()
-                    this.imageView.minimumHeight = dm.heightPixels
-                    this.imageView.minimumWidth = dm.widthPixels
-                    this.imageView.setImageBitmap(bm)
-                }.addOnFailureListener {
-                    this.imageView.setImageBitmap(
-                        ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
-                }
-
+            try {
+                val circularProgressDrawable
+                        = CircularProgressDrawable(itemView.context)
+                circularProgressDrawable.strokeWidth = 5f
+                circularProgressDrawable.centerRadius = 30f
+                circularProgressDrawable.start()
+                val url = property.mainPictureUrl
+                val mImageRef = FirebaseStorage.getInstance().getReference(url)
+                val oneMegaByte = (1024 * 1024).toLong()
+                mImageRef.getBytes(oneMegaByte)
+                    .addOnSuccessListener {
+                        val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
+                        val dm = DisplayMetrics()
+                        this.imageView.minimumHeight = dm.heightPixels
+                        this.imageView.minimumWidth = dm.widthPixels
+                        this.imageView.setImageBitmap(bm)
+                    }.addOnFailureListener {
+                        this.imageView.setImageBitmap(
+                            ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
+                    }
+            }catch (err: Exception) {
+                this.imageView.setImageBitmap(
+                    ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
+            }
             if(property.state) {
                 state.setColorFilter(Color.GREEN)
             } else {

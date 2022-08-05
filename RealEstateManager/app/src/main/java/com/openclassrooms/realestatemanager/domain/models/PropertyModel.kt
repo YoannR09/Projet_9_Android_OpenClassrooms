@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.domain.models
 
-import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
+import com.openclassrooms.realestatemanager.utils.InterestPoint
 import java.io.Serializable
 
 data class PropertyModel (
@@ -12,9 +12,11 @@ data class PropertyModel (
         val description: String,
         val picturesList: List<PictureModel>,
         val address: String,
-        val interestPoints: ArrayList<String>,
+        val interestPoints: List<InterestPoint>,
         val state: String,
         val createDate: String,
         val soldDate: String,
-        val agentId: String
+        val agentId: String,
+        val lat: Double,
+        val lng: Double
 ) : Serializable

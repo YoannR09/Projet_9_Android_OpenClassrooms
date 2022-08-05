@@ -28,23 +28,11 @@ fun PropertyModel.asPropertyListViewModel(
     )
 
 fun PropertyModel.asPropertyOnMapViewModel(context: Context): PropertyOnMapFragmentViewModel {
-    val geoCoder = Geocoder(context)
-    var address: List<Address> = try {
-        geoCoder.getFromLocationName(address, 1)
-    }catch (e: Exception) {
-        listOf()
-    }
-    var latitude = 48.858235
-    var longitude = 2.294571
-    if(address.isNotEmpty()) {
-        latitude = address[0].latitude;
-        longitude = address[0].longitude;
-    }
     return PropertyOnMapFragmentViewModel(
         marker = R.drawable.house_icon,
         id = id,
-        lat = latitude,
-        lng = longitude
+        lat = lat,
+        lng = lng
     )
 }
 
@@ -61,7 +49,9 @@ fun PropertyModel.asPropertyViewModel() =
         state = state,
         pictureList = picturesList,
         piecesCounter = pieces,
-        size = "$meter m²"
+        size = "$meter m²",
+        lat = lat,
+        lng = lng
     )
 
 fun propertyPicturesEmpty(picturesList: List<PictureModel>): String {

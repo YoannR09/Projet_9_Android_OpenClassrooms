@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class HomeActivityViewModel: ViewModel() {
 
-    val idSelected = MutableStateFlow("id")
+    val idSelected = MutableStateFlow<String?>(null)
 
     val fragmentState = MutableStateFlow(HomeFragmentState.LIST)
 

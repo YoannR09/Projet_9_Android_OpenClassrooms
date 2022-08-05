@@ -5,17 +5,16 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
@@ -33,9 +32,9 @@ class CreatePropertyActivity : AppCompatActivity() {
         }
     }
 
-    private val previous: Button get() = findViewById(R.id.create_button_previous)
-    private val next: Button get() = findViewById(R.id.create_button_next)
-    private val confirm: Button get() = findViewById(R.id.create_button_confirm)
+    private val previous: ExtendedFloatingActionButton get() = findViewById(R.id.create_button_previous)
+    private val next: ExtendedFloatingActionButton get() = findViewById(R.id.create_button_next)
+    private val confirm: ExtendedFloatingActionButton get() = findViewById(R.id.create_button_confirm)
 
     private val stepperTitle: TextView get() = findViewById(R.id.stepper_title)
     private val stepperPercent: TextView get() = findViewById(R.id.stepper_percent)
@@ -53,9 +52,11 @@ class CreatePropertyActivity : AppCompatActivity() {
     var previousStep: Int = 0
 
     val viewModel by lazy {
-        ViewModelProvider(this, CreatePropertyActivityViewModelFactory(
-            property = intent.getSerializableExtra("property") as? PropertyModel
-        ))[CreatePropertyActivityViewModel::class.java]
+        ViewModelProvider(
+            this, CreatePropertyActivityViewModelFactory(
+                property = intent.getSerializableExtra("property") as? PropertyModel
+            )
+        )[CreatePropertyActivityViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,43 +69,44 @@ class CreatePropertyActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         appBar.setTitleTextColor(Color.WHITE)
 
-        val availableId = sellToggle[0].id
-        val sellId = sellToggle[1].id
-
-        if(viewModel.property != null) {
-            if(viewModel.property!!.state == "AVAILABLE") {
-                sellToggle.check(availableId)
-            } else {
-                sellToggle.check(sellId)
-            }
-            sellBar.visibility = View.VISIBLE
-        } else {
-            sellBar.visibility = View.GONE
+        viewModel.state.observe(this) {
+            sellToggle.check(
+                when (it) {
+                    PropertyState.SELL -> R.id.toggle_sell
+                    PropertyState.AVAILABLE -> R.id.toggle_available
+                }
+            )
         }
 
-        sellToggle.addOnButtonCheckedListener{ group, _, isCheck ->
-            // val oldChecked = group.checkedButtonId
-            if(isCheck) {
-                if(group.checkedButtonId == availableId) {
-                    group.check(availableId)
-                    viewModel.updateState(PropertyState.AVAILABLE.name, null)
-                } else {
-                    group.check(sellId)
-                    val datePicker =
-                        MaterialDatePicker.Builder.datePicker()
-                            .setTitleText("Property sell date")
-                            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                            .build()
-                    println("create picker here")
-                    datePicker.show(supportFragmentManager, "TAG")
-                    datePicker.addOnPositiveButtonClickListener {
-                            date ->
-                        viewModel.updateState(PropertyState.SELL.name, (date / 1000).toString())
-                    }
-                    datePicker.addOnCancelListener{
-                        // sellToggle.check(availableId)
-                    }
+        var firstCheck = true
 
+        sellToggle.addOnButtonCheckedListener { _, checkedId, isCheck ->
+            // val oldChecked = group.checkedButtonId
+            if (isCheck) {
+                when {
+                    firstCheck -> firstCheck = false
+                    checkedId == R.id.toggle_available -> viewModel.state.value = PropertyState.AVAILABLE
+
+                    checkedId == R.id.toggle_sell-> MaterialDatePicker.Builder.datePicker()
+                        .setTitleText("Property sell date")
+                        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+                        .build()
+                        .apply {
+                            addOnPositiveButtonClickListener { date ->
+                                viewModel.soldDate.value = date.toString()
+                                viewModel.state.value = PropertyState.SELL
+                            }
+                            addOnCancelListener {
+                                sellToggle.check(R.id.toggle_available)
+                                viewModel.state.value = PropertyState.AVAILABLE
+                            }
+                            addOnNegativeButtonClickListener {
+                                sellToggle.check(R.id.toggle_available)
+                                viewModel.state.value = PropertyState.AVAILABLE
+                            }
+                        }.show(supportFragmentManager, "TAG")
+
+                    else -> { }
                 }
             }
         }
@@ -124,10 +126,10 @@ class CreatePropertyActivity : AppCompatActivity() {
         }
 
         viewModel.stepperPercent.observe(this) {
-            stepper.setProgressCompat(it,true)
+            stepper.setProgressCompat(it, true)
         }
 
-        viewModel.previousStep.observe(this, previous::setVisibility)
+        viewModel.previousStep.observe(this, action = previous::setVisibility)
 
         viewModel.nextStepIsVisible.observe(this) {
             next.visibility = when (it) {
@@ -136,13 +138,16 @@ class CreatePropertyActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.confirmButton.observe(this, confirm::setVisibility)
+        viewModel.confirmButton.observe(this, action = confirm::setVisibility)
 
         viewModel.currentStep.observe(this) {
             val ft = fm.beginTransaction()
 
             when {
-                it > previousStep ->  ft.setCustomAnimations(R.anim.slide_out_left, R.anim.slide_in_right)
+                it > previousStep -> ft.setCustomAnimations(
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_right
+                )
                 else -> ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
             }
 
@@ -169,7 +174,7 @@ class CreatePropertyActivity : AppCompatActivity() {
                 val intent = Intent(this, HomeActivity::class.java)
                 startActivity(intent)
             }
-            viewModel.createProperty(startActivity)
+            viewModel.createProperty(this, startActivity)
         }
     }
 
@@ -177,10 +182,12 @@ class CreatePropertyActivity : AppCompatActivity() {
         viewModel
             .screenState
             .observe(this) { state ->
-                when(state) {
+                when (state) {
                     is ScreenStateError -> {
-                        val toast = Toast.makeText(this,
-                            "Error, try again", Toast.LENGTH_LONG)
+                        val toast = Toast.makeText(
+                            this,
+                            "Error, try again", Toast.LENGTH_LONG
+                        )
                         toast.show()
                     }
                     ScreenStateLoading -> {}

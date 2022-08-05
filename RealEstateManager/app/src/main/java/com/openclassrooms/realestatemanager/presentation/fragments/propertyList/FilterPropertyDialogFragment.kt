@@ -11,13 +11,14 @@ import android.widget.Button
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.slider.RangeSlider
 import com.google.android.material.textfield.TextInputLayout
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyInterestPointUiModel
+import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivitySharedViewModel
 
 enum class PropertyType (
@@ -33,6 +34,7 @@ enum class PropertyType (
 
 class FilterPropertyDialogFragment : DialogFragment() {
 
+    private val toolbar: MaterialToolbar get() = requireView().findViewById(R.id.filter_top_bar)
     private val selectDateCreated: Button get() = requireView().findViewById(R.id.select_create_date)
     private val selectDateSolded: Button get() = requireView().findViewById(R.id.select_sold_date)
     private val applyButton: Button get() = requireView().findViewById(R.id.apply_filter)
@@ -57,7 +59,9 @@ class FilterPropertyDialogFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+            toolbar.setNavigationOnClickListener{
+                this.dismiss()
+            }
         inputSelectType.addTextChangedListener {
             homeActivitySharedViewModel.typeSelect.value = it.toString()
         }
@@ -101,7 +105,7 @@ class FilterPropertyDialogFragment : DialogFragment() {
             }
         }
 
-        setInterestChips(PropertyInterestPointUiModel.values().map { it.title })
+        setInterestChips(PropertyLocationTypeUiModel.values().map { it.title })
 
         applyButton.setOnClickListener {
             applyFilterOnPropertyList()

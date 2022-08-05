@@ -10,13 +10,11 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         android:id="@+id/top_bar_create">
-
-
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/top_bar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:navigationIconTint="@android:color/white"
             app:title="Create a property"
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             >
@@ -41,20 +39,21 @@
                 android:id="@+id/sell_property_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                app:singleSelection="true"
+               android:gravity="end"
+               app:selectionRequired="true"
+               app:singleSelection="true"
                 android:layout_marginStart="16dp">
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/toggle_available"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:text="available"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="?attr/materialButtonOutlinedStyle"
                     />
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/toggle_sell"
-                    style="@style/Widget.App.Button.OutlinedButton.IconOnly"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Sell"
@@ -62,35 +61,6 @@
             </com.google.android.material.button.MaterialButtonToggleGroup>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/create_button_previous"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="PREVIOUS"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button
-        android:id="@+id/create_button_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="NEXT"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button
-        android:id="@+id/create_button_confirm"
-        android:visibility="gone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:text="CREATE"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-    <Button
-        android:visibility="gone"
-        android:id="@+id/test_add"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="add test"
-        app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/sell_bar"
         android:layout_width="match_parent"
@@ -126,11 +96,50 @@
             app:trackColor="@color/colorPrimary"
             android:progress="40"
             tools:indeterminate="true"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+        >
         <FrameLayout
+            android:paddingBottom="100dp"
             app:layout_constraintTop_toBottomOf="@id/stepper"
             android:id="@+id/create_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
         </FrameLayout>
+        </ScrollView>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/create_button_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="center"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="PREVIOUS"/>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/create_button_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:gravity="center"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="NEXT"/>
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/create_button_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:gravity="center"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="CREATE"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

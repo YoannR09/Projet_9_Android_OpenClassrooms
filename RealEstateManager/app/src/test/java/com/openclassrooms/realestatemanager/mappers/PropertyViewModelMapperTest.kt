@@ -15,7 +15,7 @@ class PropertyViewModelMapperTest {
         id="id",
         address= "ad",
         agentId="agent",
-        createDate="created",
+        createDate="0",
         description="desc",
         interestPoints = arrayListOf(),
         meter= 4,
@@ -24,7 +24,9 @@ class PropertyViewModelMapperTest {
         soldDate="sold",
         state="state",
         type="type",
-        price = 44
+        price = 44,
+        lat = 11.0,
+        lng = 12.2
     )
 
     @Test
@@ -33,7 +35,7 @@ class PropertyViewModelMapperTest {
         assertEquals(mapped.id, "id")
         assertEquals(mapped.city, "ad")
         assertEquals(mapped.mainPictureUrl, "none")
-        assertEquals(mapped.name, "name")
+        assertEquals(mapped.name, "type")
         assertEquals(mapped.price, "44")
         assertEquals(mapped.size, 4)
     }
@@ -47,6 +49,6 @@ class PropertyViewModelMapperTest {
         assertEquals(mapped.description, "desc")
         assertEquals(mapped.price, "44")
         assertEquals(mapped.state, "state")
-        assertEquals(mapped.createdDate, ", on created")
+        assertEquals(mapped.createdDate, ", on 01/01/1970")
     }
 }
