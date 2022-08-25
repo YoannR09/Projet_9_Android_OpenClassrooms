@@ -180,19 +180,18 @@ class CreatePropertyActivityViewModel(
                     UpdatePropertyUseCase().updateProperty(newProperty)
                 } else {
                     CreatePropertyUseCase().createProperty(newProperty)
+                    createNotificationChannel()
+                    val builder: NotificationCompat.Builder =
+                        NotificationCompat.Builder(RealStateManagerApplication.context, "channel_id")
+                            .setContentTitle("Property created !")
+                            .setSmallIcon(R.drawable.ic_baseline_map_24)
+                            .setContentText(" Your property as succesfully created.")
+                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    val notificationManager = NotificationManagerCompat.from(
+                        RealStateManagerApplication.context
+                    )
+                    notificationManager.notify(44, builder.build())
                 }
-
-                createNotificationChannel()
-                val builder: NotificationCompat.Builder =
-                    NotificationCompat.Builder(RealStateManagerApplication.context, "channel_id")
-                        .setContentTitle("Property created !")
-                        .setSmallIcon(R.drawable.ic_baseline_map_24)
-                        .setContentText(" Your property as succesfully created.")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                val notificationManager = NotificationManagerCompat.from(
-                    RealStateManagerApplication.context
-                )
-                notificationManager.notify(44, builder.build())
                 startActivity()
             }
         } catch (e: Exception) {

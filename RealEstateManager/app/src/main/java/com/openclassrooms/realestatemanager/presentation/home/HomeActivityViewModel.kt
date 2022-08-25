@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class HomeActivityViewModel: ViewModel() {
 
+
+    val isAnonymous = MutableStateFlow<Boolean>(false)
+
     val idSelected = MutableStateFlow<String?>(null)
 
     val fragmentState = MutableStateFlow(HomeFragmentState.LIST)

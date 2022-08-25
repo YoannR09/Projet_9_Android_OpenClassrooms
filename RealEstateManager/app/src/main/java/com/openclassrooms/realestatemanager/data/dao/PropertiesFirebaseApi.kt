@@ -15,6 +15,7 @@ import com.google.firebase.ktx.Firebase
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import java.lang.Error
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
@@ -116,10 +117,12 @@ class PropertiesFirebaseApi {
                         .addOnSuccessListener {
                             coroutine.resume(Unit)
                         }.addOnFailureListener {
+                            coroutine.resumeWithException(it)
                             it.printStackTrace()
                         }
                 }
             }.addOnFailureListener {
+                coroutine.resumeWithException(it)
                 it.printStackTrace()
             }
         }

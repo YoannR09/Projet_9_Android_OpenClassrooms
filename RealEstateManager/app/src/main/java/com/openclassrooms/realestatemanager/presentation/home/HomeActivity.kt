@@ -26,6 +26,7 @@ import com.openclassrooms.realestatemanager.presentation.create.CreatePropertyAc
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.FilterPropertyDialogFragment
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.MapsFragment
 import com.openclassrooms.realestatemanager.presentation.fragments.propertyList.PropertyListFragment
+import com.openclassrooms.realestatemanager.utils.Utils.isNetworkAvailable
 import com.openclassrooms.realestatemanager.utils.observe
 
 
@@ -59,32 +60,34 @@ class HomeActivity : AppCompatActivity() {
     private val fm: FragmentManager get() = supportFragmentManager
 
     private val signInLauncher = registerForActivityResult(
-            FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
+        FirebaseAuthUIActivityResultContract()) { result: FirebaseAuthUIAuthenticationResult? -> this.onSignInResult(result!!) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         if (FirebaseAuth.getInstance().currentUser == null) {
             val providers: List<AuthUI.IdpConfig> = listOf(
-                    AuthUI.IdpConfig.EmailBuilder().build()
-                    //AuthUI.IdpConfig.GoogleBuilder().build(),
-                    //AuthUI.IdpConfig.TwitterBuilder().build(),
+                AuthUI.IdpConfig.EmailBuilder().build()
+                //AuthUI.IdpConfig.GoogleBuilder().build(),
+                //AuthUI.IdpConfig.TwitterBuilder().build(),
             )
             val signInIntent: Intent = AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .setIsSmartLockEnabled(false)
-                    //.setTheme(R.style.LoginTheme)
-                    //.setLogo(R.drawable.main_logo)
-                    .build()
+                .createSignInIntentBuilder()
+                .setAvailableProviders(providers)
+                .setIsSmartLockEnabled(false)
+                //.setTheme(R.style.LoginTheme)
+                //.setLogo(R.drawable.main_logo)
+                .build()
             signInLauncher.launch(signInIntent)
         } else {
-            this.initView()
+            initView()
         }
+
     }
 
     private fun initView() {
         setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
         fm.beginTransaction().add(R.id.container_fragment, mapFragment, "MAP")
             .hide(mapFragment)
             .commit()
@@ -120,13 +123,16 @@ class HomeActivity : AppCompatActivity() {
             showDialog()
         }
         mapButton.setOnClickListener {
-          viewModel.fragmentState.value = HomeFragmentState.MAP
+            viewModel.fragmentState.value = HomeFragmentState.MAP
         }
         leaveButton.setOnClickListener {
             logoutToRefreshMainActivity()
         }
-        agent.text = FirebaseAuth.getInstance().currentUser?.email
-        setSupportActionBar(toolbar)
+        agent.text = if(viewModel.isAnonymous.value) {
+            "anonymous"
+        } else {
+            FirebaseAuth.getInstance().currentUser?.email
+        }
     }
 
     /**
@@ -138,7 +144,7 @@ class HomeActivity : AppCompatActivity() {
             this.initView()
         } else {
             val toast = Toast.makeText(RealStateManagerApplication.contextApp,
-                    getString(R.string.error_login), Toast.LENGTH_LONG)
+                getString(R.string.error_login), Toast.LENGTH_LONG)
             toast.show()
             logoutToRefreshMainActivity()
         }
@@ -181,7 +187,7 @@ class HomeActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             DRAWER_ICON_ID -> {
-                    drawer.openDrawer(GravityCompat.START)
+                drawer.openDrawer(GravityCompat.START)
             }
         }
         return super.onOptionsItemSelected(item)

@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content">
                 <androidx.fragment.app.FragmentContainerView
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/list_picture_fragment"
                     tools:context=".presentation.home.HomeActivity"
                     android:name="com.openclassrooms.realestatemanager.presentation.fragments.property.PictureListFragment" />

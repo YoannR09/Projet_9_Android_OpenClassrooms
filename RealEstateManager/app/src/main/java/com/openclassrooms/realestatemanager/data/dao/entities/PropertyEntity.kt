@@ -6,8 +6,7 @@ import com.google.type.LatLng
 
 @Entity
 data class PropertyEntity(
-    @PrimaryKey
-    val id: String = "",
+    @PrimaryKey val id: String = "",
     val type: String = "",
     val price: Int = 0,
     val meter: Int = 0,

@@ -13,13 +13,16 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.google.common.io.Resources.getResource
 import com.google.firebase.storage.FirebaseStorage
+import com.openclassrooms.realestatemanager.GlideApp
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.utils.PropertyState
 
 interface PropertyAdapterListener {
@@ -88,28 +91,13 @@ class PropertyAdapter(
             this.city.text = property.city
             this.price.text = property.price
             try {
-                val circularProgressDrawable
-                        = CircularProgressDrawable(itemView.context)
-                circularProgressDrawable.strokeWidth = 5f
-                circularProgressDrawable.centerRadius = 30f
-                circularProgressDrawable.start()
-                val url = property.mainPictureUrl
-                val mImageRef = FirebaseStorage.getInstance().getReference(url)
-                val oneMegaByte = (1024 * 1024).toLong()
-                mImageRef.getBytes(oneMegaByte)
-                    .addOnSuccessListener {
-                        val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
-                        val dm = DisplayMetrics()
-                        this.imageView.minimumHeight = dm.heightPixels
-                        this.imageView.minimumWidth = dm.widthPixels
-                        this.imageView.setImageBitmap(bm)
-                    }.addOnFailureListener {
-                        this.imageView.setImageBitmap(
-                            ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
-                    }
-            }catch (err: Exception) {
-                this.imageView.setImageBitmap(
-                    ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
+                val storage = FirebaseStorage.getInstance().reference.child(property.mainPictureUrl)
+                GlideApp.with(itemView.context)
+                    .load(storage)
+                    .error(R.drawable.no_image_found)
+                    .into(imageView)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
             if(property.state) {
                 state.setColorFilter(Color.GREEN)

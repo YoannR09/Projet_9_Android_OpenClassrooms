@@ -9,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.Glide
 import com.google.firebase.storage.FirebaseStorage
+import com.openclassrooms.realestatemanager.GlideApp
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.RealStateManagerApplication
 import com.openclassrooms.realestatemanager.domain.models.PictureModel
@@ -67,23 +70,12 @@ class PictureAdapter (data: List<PictureModel>?
             val url = picture.url
             pieceTitle.text = picture.name
             try {
-                val mImageRef = FirebaseStorage.getInstance().getReference(url)
-                val oneMegaByte = (1024 * 1024).toLong()
-                mImageRef.getBytes(oneMegaByte)
-                    .addOnSuccessListener {
-                        val bm = BitmapFactory.decodeByteArray(it, 0, it.size)
-                        val dm = DisplayMetrics()
-                        imageView.minimumHeight = dm.heightPixels
-                        imageView.minimumWidth = dm.widthPixels
-                        imageView.setImageBitmap(bm)
-                    }.addOnFailureListener {
-                        // Handle any errors
-                        imageView.setImageBitmap(
-                            ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
-                    }
+                val storage = FirebaseStorage.getInstance().getReference(url)
+                GlideApp.with(itemView)
+                    .load(storage)
+                    .error(R.drawable.no_image_found)
+                    .into(imageView)
             } catch (e: Exception) {
-                imageView.setImageBitmap(
-                    ContextCompat.getDrawable(this.itemView.context,R.drawable.no_image_found)?.toBitmap())
                 e.printStackTrace()
             }
         }

@@ -14,3 +14,4 @@ val Context.hasInternet: Boolean
 
 val Context.isLargeScreen: Boolean
     get() = resources.getBoolean(R.bool.isTablet)
+

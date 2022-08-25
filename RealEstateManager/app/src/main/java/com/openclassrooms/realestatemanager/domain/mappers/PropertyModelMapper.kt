@@ -4,6 +4,7 @@ import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
 import com.openclassrooms.realestatemanager.presentation.create.uiModels.toModel
+import com.openclassrooms.realestatemanager.presentation.mappers.toModelArray
 
 fun PropertyEntity.asModel() =
         PropertyModel(
@@ -15,7 +16,7 @@ fun PropertyEntity.asModel() =
                 description = description,
                 picturesList = picturesList.map { it.asModel() },
                 address = address,
-                interestPoints = interestPoints.map { string -> PropertyLocationTypeUiModel.values().first { it.title == string }.toModel() },
+                interestPoints = toModelArray(interestPoints),
                 state = state,
                 createDate = createDate,
                 soldDate = soldDate,
