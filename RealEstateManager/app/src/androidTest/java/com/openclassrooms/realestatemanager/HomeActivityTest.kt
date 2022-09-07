@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager
 
 
 import android.content.Intent
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -12,7 +11,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.rule.ActivityTestRule
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.presentation.home.HomeActivity
-import com.openclassrooms.realestatemanager.presentation.home.HomeFragmentState
+import com.openclassrooms.realestatemanager.utils.Utils
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertTrue
 import org.hamcrest.core.IsNot.not

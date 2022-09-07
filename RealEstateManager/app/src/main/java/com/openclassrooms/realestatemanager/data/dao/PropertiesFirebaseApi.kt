@@ -18,27 +18,21 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-
 class PropertiesFirebaseApi {
 
     private val db = Firebase.firestore
 
     suspend fun list(): List<PropertyEntity> {
-        return suspendCoroutine {
+        return suspendCoroutine { coroutine ->
             db.collection("property")
                 .get()
-                .addOnCompleteListener { task ->
-                    if(task.isSuccessful) {
-                        it.resume(task.result?.documents?.mapNotNull {
-                            it.toObject(PropertyEntity::class.java)
-                        }?: listOf())
-                    } else {
-                        it.resume(listOf())
-                    }
-                }
-                .addOnFailureListener {
-                        err ->
+                .addOnSuccessListener {
+                    coroutine.resume(it?.documents?.mapNotNull {
+                        it.toObject(PropertyEntity::class.java)
+                    }?: listOf())
+                }.addOnFailureListener { err ->
                     err.printStackTrace()
+                    throw err
                 }
         }
     }
@@ -105,7 +99,7 @@ class PropertiesFirebaseApi {
             docIdQuery.get().addOnSuccessListener { task ->
                 for (document in task.documents) {
                     document.reference.update("description", propertyEntity.description,
-                        "interestPoint", propertyEntity.interestPoints,
+                        "interestPoints", propertyEntity.interestPoints,
                         "meter", propertyEntity.meter,
                         "picturesList", propertyEntity.picturesList,
                         "pieces", propertyEntity.pieces,

@@ -29,7 +29,7 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void test() {
+    public void testNetwork() {
         Context context = InstrumentationRegistry.getInstrumentation().getContext();
         assertTrue(Utils.isNetworkAvailable(context));
     }

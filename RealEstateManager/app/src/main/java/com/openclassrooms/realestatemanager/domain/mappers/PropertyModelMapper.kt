@@ -2,8 +2,6 @@ package com.openclassrooms.realestatemanager.domain.mappers
 
 import com.openclassrooms.realestatemanager.data.dao.entities.PropertyEntity
 import com.openclassrooms.realestatemanager.domain.models.PropertyModel
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.PropertyLocationTypeUiModel
-import com.openclassrooms.realestatemanager.presentation.create.uiModels.toModel
 import com.openclassrooms.realestatemanager.presentation.mappers.toModelArray
 
 fun PropertyEntity.asModel() =
