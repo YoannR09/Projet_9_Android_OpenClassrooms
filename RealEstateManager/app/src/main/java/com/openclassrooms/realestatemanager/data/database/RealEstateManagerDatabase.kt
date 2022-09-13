@@ -35,7 +35,7 @@ abstract class RealEstateManagerDatabase : RoomDatabase() {
         fun createInstanceTest(context: Context) {
             instance = Room.databaseBuilder(
                     context.applicationContext,
-                    RealEstateManagerDatabase::class.java, Timestamp(Date().time).toString() + "ToDocTestAppDB.db")
+                    RealEstateManagerDatabase::class.java, Timestamp(Date().time).toString() + "RealEstateTestAppDB.db")
                     .allowMainThreadQueries()
                     .addCallback(prepopulateDatabase())
                     .build()

@@ -89,7 +89,7 @@ class PropertyAdapter(
             }
             this.title.text = property.name
             this.city.text = property.city
-            this.price.text = property.price
+            this.price.text = "${property.price} $"
             try {
                 val storage = FirebaseStorage.getInstance().reference.child(property.mainPictureUrl)
                 GlideApp.with(itemView.context)

@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
 import com.google.android.material.textfield.TextInputEditText
@@ -21,6 +22,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.dao.entities.PictureEntity
 import com.openclassrooms.realestatemanager.domain.models.PictureModel
 import com.openclassrooms.realestatemanager.utils.observe
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import pl.aprilapps.easyphotopicker.*
 import java.io.File
@@ -41,6 +43,9 @@ class PicturesStepFragment : Fragment() {
     private lateinit var easyImage: EasyImage
 
     private lateinit var fileToUpdate: File
+    private var selectedFile = false
+
+    private val canBeEdited = MutableStateFlow(false)
 
     var storage: FirebaseStorage = FirebaseStorage.getInstance()
 
@@ -56,7 +61,9 @@ class PicturesStepFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val viewModel = (activity as CreatePropertyActivity).viewModel
+        canBeEdited.observe(this) {
+            buttonUpload.isEnabled = it
+        }
         buttonSelectPicture.setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_DENIED) {
@@ -65,9 +72,16 @@ class PicturesStepFragment : Fragment() {
                 pickPictures()
             }
         }
-
         buttonUpload.setOnClickListener {
             uploadPicture()
+        }
+
+        inputPiece.addTextChangedListener {
+            checkUpload()
+        }
+
+        inputDescription.addTextChangedListener {
+            checkUpload()
         }
 
         (requireActivity() as CreatePropertyActivity).viewModel.pictureList.observe(this) {
@@ -91,13 +105,18 @@ class PicturesStepFragment : Fragment() {
         easyImage.openChooser(this)
     }
 
+    private fun checkUpload() {
+        canBeEdited.value = inputDescription.text.toString().isNotEmpty()
+                && inputPiece.text.toString().isNotEmpty()
+                && selectedFile
+    }
+
     private fun uploadPicture() {
         val storageRef = storage.reference
         val newPictureId = "property/${FirebaseAuth.getInstance().currentUser?.email}/${inputPiece.text}-${Date().time}.jpg"
         val mountainsRef = storageRef.child(newPictureId)
         val uploadTask = mountainsRef.putStream(FileInputStream(fileToUpdate))
         uploadTask.addOnFailureListener {
-            println("error here picture upload failed")
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateError("Error")
         }.addOnSuccessListener { taskSnapshot ->
             (requireActivity() as CreatePropertyActivity).viewModel.pictureList.update {
@@ -111,6 +130,7 @@ class PicturesStepFragment : Fragment() {
             }
             inputDescription.text?.clear()
             inputPiece.text?.clear()
+            checkUpload()
             (requireActivity() as CreatePropertyActivity).viewModel.screenState.value = ScreenStateSuccess("Success")
         }
     }
@@ -136,14 +156,20 @@ class PicturesStepFragment : Fragment() {
                 object : DefaultCallback() {
                     override fun onMediaFilesPicked(imageFiles: Array<MediaFile>, source: MediaSource) {
                         fileToUpdate = imageFiles[0].file
+                        selectedFile = true
+                        checkUpload()
                     }
 
                     override fun onImagePickerError(error: Throwable, source: MediaSource) {
                         //Some error handling
+                        selectedFile = false
+                        checkUpload()
                         error.printStackTrace()
                     }
 
                     override fun onCanceled(source: MediaSource) {
+                        selectedFile = false
+                        checkUpload()
                         //Not necessary to remove any files manually anymore
                     }
                 })

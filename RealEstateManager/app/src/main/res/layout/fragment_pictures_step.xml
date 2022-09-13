@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="90dp"
     tools:context=".presentation.create.PicturesStepFragment">
     <LinearLayout
         android:layout_width="match_parent"
@@ -72,11 +73,13 @@
         <Button
             android:id="@+id/select_picture"
             android:layout_width="match_parent"
+            android:textColor="@android:color/white"
             android:layout_height="wrap_content"
             android:text="Select picture"/>
         <Button
             android:id="@+id/upload_picture"
             android:layout_width="match_parent"
+            android:textColor="@android:color/white"
             android:layout_height="wrap_content"
             android:text="Upload picture"/>
 

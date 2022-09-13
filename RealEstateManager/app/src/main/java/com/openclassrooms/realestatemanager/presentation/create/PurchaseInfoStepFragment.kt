@@ -34,6 +34,7 @@ class PurchaseInfoStepFragment : Fragment() {
             } else {
                 it.toString().toInt()
             }
+            inputPieces.setSelection(inputPieces.length()) // fix cursos bug
             (activity as CreatePropertyActivity).viewModel.pieces.value = input
         }
 
@@ -46,6 +47,7 @@ class PurchaseInfoStepFragment : Fragment() {
             } else {
                 it.toString().toInt()
             }
+            inputPrice.setSelection(inputPrice.length()) // fix cursos bug
             (activity as CreatePropertyActivity).viewModel.price.value = input
         }
 
@@ -58,6 +60,7 @@ class PurchaseInfoStepFragment : Fragment() {
             } else {
                 it.toString().toInt()
             }
+            inputSize.setSelection(inputSize.length()) // fix cursos bug
             (activity as CreatePropertyActivity).viewModel.size.value = input
         }
     }
