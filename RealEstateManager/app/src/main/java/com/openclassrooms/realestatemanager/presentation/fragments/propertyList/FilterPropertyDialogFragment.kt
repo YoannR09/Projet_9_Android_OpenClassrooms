@@ -66,6 +66,8 @@ class FilterPropertyDialogFragment : DialogFragment() {
             homeActivitySharedViewModel.typeSelect.value = it.toString()
         }
 
+        inputSelectType.setText(homeActivitySharedViewModel.typeSelect.value, false)
+
         inputSelectPicturesLength.addTextChangedListener {
             homeActivitySharedViewModel.picturesLength.value = it.toString()
         }
